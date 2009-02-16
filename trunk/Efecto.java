@@ -10,22 +10,26 @@ package hello;
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.game.Sprite;
 import java.util.Random;
+import java.util.Vector;
 /**
  *
  * @author agustin
  */
-public class Efecto{
+public class Efecto implements Runnable{
     
     private Sprite sprite;
     private Image image;
     private boolean alive = true;
     private boolean withTransformation = true;
-    private int numOfObjects = 1;
     private int screenWidth;
     private int screenHeight;
     private Random rand;
+    private int velocity = 300;
+    private int sleepTime = 600;
+    Thread tefecto;
+    private Vector elems;
     
-    Graphics g;
+    //Graphics g;
 
    
     /*Constructor:
@@ -36,12 +40,13 @@ public class Efecto{
      *          scale  = porcentaje que ocupa la imagen en la pantalla
      *          g      = donde va a ser renderizada la imagen
      */
-    public Efecto (String nomImg, int px, int py, int scale, Graphics g)
+    public Efecto (String nomImg, int px, int py, int scale)
     {
-        this.g = g;
+      //  this.g = g;
         this.screenHeight = py;
         this.screenWidth = px;
         this.rand = new Random();
+        elems = new Vector();
 
         try {
             //cargamos la imagen
@@ -54,7 +59,9 @@ public class Efecto{
                 
             //seteamos el pixel de referencia justo en el medio de la imagen
             this.sprite.defineReferencePixel(image.getWidth() / 2, image.getHeight() / 2);
-            
+            this.tefecto=new Thread(this);
+            this.tefecto.start();
+            this.setNumberOfObjects(5);
             
         } catch (Exception e){System.out.print("Error creando sprite "+nomImg+"\n");}
        
@@ -63,7 +70,15 @@ public class Efecto{
 
     public void setAlive (boolean b)
     {
-        this.alive = b;
+       if (b == true) {
+            if (!this.alive) {
+                this.alive = true;
+                this.tefecto=new Thread(this);
+                tefecto.start();  //chequear esto
+            }             
+        } else {            
+            this.alive = false;
+        }
     }
     public boolean isAlive ()
     {
@@ -71,30 +86,78 @@ public class Efecto{
     }
     public void setNumberOfObjects (int n)
     {
-        this.numOfObjects = n;
+        if (elems.size() < n) {
+            for (int i = 0; i < n - elems.size(); i++) {
+                Point p = new Point(rand.nextInt(this.screenWidth), rand.nextInt(this.screenHeight));
+                elems.addElement(p);
+            }
+        } else {
+            
+        }
     }
     public void activeTransformations(boolean b)
     {
         this.withTransformation = b;
     }
+    public void setVelocity (int v)
+    {
+        this.velocity = v;
+    }
+    public void setSleepTime (int s)
+    {
+        this.sleepTime = s;
+    }
+    
+    public void run ()
+    {
+        while (this.alive)
+        {
+            Point p;
+            for (int i = 0; i < elems.size(); i++){
+                //seteamos las posiciones de cada uno de los objetos
+                p = (Point) elems.elementAt(i);
+                p.x = this.rand.nextInt(this.screenWidth);
+                p.y = this.rand.nextInt(this.screenHeight);
+                if (this.withTransformation)
+                    p.rotation = this.rand.nextInt(8);
+            }
+            
+            try {
+                Thread.sleep(this.velocity);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            this.alive = false;
+            try {
+                Thread.sleep(this.sleepTime);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            this.alive = true;
+        }
+    }
 
-    public void paint ()
+    public void paint (Graphics g)
     {
         if (this.alive) {
-            for (int i = 0; i < this.numOfObjects; i++){
-                //chequeamos si soporta transofrmacion
-                if (this.withTransformation) {
-                    this.sprite.setTransform(rand.nextInt(8));
-                }
-                //posicionamos dentro de la pantalla
-                this.sprite.setPosition(this.rand.nextInt(this.screenWidth),
-                        this.rand.nextInt(this.screenHeight));
-                //dibujamos ahora en cualquier lugar
+            Point p;
+            for (int i = 0; i < elems.size(); i++){
+                //seteamos las posiciones de cada uno de los objetos
+                p = (Point) elems.elementAt(i);
+                this.sprite.setPosition(p.x, p.y);
+                this.sprite.setTransform(p.rotation);
                 this.sprite.paint(g);
-
             }
         }
     }
 
    
+}
+
+class Point {
+    public int x;
+    public int y;
+    public int rotation;
+
+    Point (int x, int y) {this.x=x;this.y = y;};
 }
