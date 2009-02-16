@@ -3,9 +3,11 @@ package hello;
 import java.util.Random;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
+import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.lcdui.game.LayerManager;
+import javax.microedition.lcdui.Canvas;
 
-class SSCanvas extends GameCanvas implements Runnable{
+class SSCanvas extends Canvas implements Runnable{
 
 	 //private Sprite miSprite=new Sprite(1);
 	 //private int pos_agu=80;
@@ -18,9 +20,7 @@ class SSCanvas extends GameCanvas implements Runnable{
          private LayerManager lmanager;
        
          public SSCanvas()
-         {
-             super(true);
-          
+         {         
            //random.setSeed(System.currentTimeMillis());
            subZero.set_pos(this.getWidth()/2, this.getHeight()/2);
            //subZero.set_transformation(subZero.getSprite().TRANS_MIRROR);
@@ -28,30 +28,20 @@ class SSCanvas extends GameCanvas implements Runnable{
            lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
            //lmanager.insert(subZero.getSprite(), 0);
            lmanager.append(subZero.getSprite());
+           
        
 	 }
 	 
 	 
 	 public void run() {
 	        //this.activo=false;
-             Graphics g = getGraphics();
-             g.setColor(0,0,0); 
-             g.fillRect(0,0,getWidth(),getHeight());
-                  while (true) {
-                  //g.fillRect(0,0,getWidth(),getHeight());
-                  g.drawString("PUNTAJE: "+ subZero.getSprite().getFrame(), 50, 10, 0);
-                  //subZero.getSprite().paint(g);
+            
+             
+                  while (true) {                 
+                    repaint();
+                    serviceRepaints();
 
-                   g.setColor(255,0,0); 
-                   g.fillRect(0,0,getWidth(),getHeight());
-                  lmanager.paint(g, 0, 0);
-                  flushGraphics();
-                    //repaint();
-                    //serviceRepaints();
-                	
-                
-                
-	            try {
+                    try {
 	                Thread.sleep(5);
 	            } catch (InterruptedException e) {
 	                System.out.println(e.toString());
@@ -66,12 +56,14 @@ class SSCanvas extends GameCanvas implements Runnable{
 
 	        switch (action) {
                     case FIRE:
-         
+                        subZero.set_alive(true);         
                         break;
                     case KEY_NUM5:
          
                         break;
 	            case LEFT:
+                        subZero.set_transformation(Sprite.TRANS_MIRROR);
+                        subZero.set_alive(false);
          
 	            	break;
 	        }
@@ -97,17 +89,14 @@ public void keyReleased (int keyCode) {
         
     }
 }
-       /*	 public void paint(Graphics g) {
 
-	 //  Borrar pantalla
-	 g.setColor(0,0,0);
-	 g.fillRect(0,0,getWidth(),getHeight());
-	 
-         
-         //g.drawString("PUNTAJE: "+ subZero.getSprite().getFrame(), 50, 10, 0);
-         //subZero.getSprite().paint(g);
-        
+public void paint (Graphics g)
+{
+    g.setColor(255,0,0);
+    g.fillRect(0,0,getWidth(),getHeight());
+    lmanager.paint(g, 0, 0);
+    g.drawString("PUNTAJE: "+ subZero.getSprite().getFrame(), 50, 10, 0);
 
-	 }
-        */
+}
+
  }
