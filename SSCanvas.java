@@ -18,6 +18,7 @@ class SSCanvas extends Canvas implements Runnable{
          private int puntaje;
          private Personaje subZero = new Personaje("tira_mona_paso1.png", this.getWidth(), this.getHeight(), 100, 150, 60);
          private LayerManager lmanager;
+         private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
        
          public SSCanvas()
          {         
@@ -28,6 +29,7 @@ class SSCanvas extends Canvas implements Runnable{
            lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
            //lmanager.insert(subZero.getSprite(), 0);
            lmanager.append(subZero.getSprite());
+           luces.setNumberOfObjects(3);
            
        
 	 }
@@ -92,8 +94,9 @@ public void keyReleased (int keyCode) {
 
 public void paint (Graphics g)
 {
-    g.setColor(255,0,0);
+    g.setColor(0,0,0);
     g.fillRect(0,0,getWidth(),getHeight());
+    luces.paint(g);
     lmanager.paint(g, 0, 0);
     g.drawString("PUNTAJE: "+ subZero.getSprite().getFrame(), 50, 10, 0);
 
