@@ -14,7 +14,7 @@ class SSCanvas extends GameCanvas implements Runnable{
 	 public boolean activo=false;
          private Random random=new Random();
          private int puntaje;
-         private Personaje subZero = new Personaje("tira_mona_paso1.png", this.getWidth(), this.getHeight(), 100, 150, 50);
+         private Personaje subZero = new Personaje("tira_mona_paso1.png", this.getWidth(), this.getHeight(), 100, 150, 60);
          private LayerManager lmanager;
        
          public SSCanvas()
