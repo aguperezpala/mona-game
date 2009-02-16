@@ -16,6 +16,7 @@
  *  boolean is_visible();
  *  void set_alive (boolean b);
  *  boolean is_alive();
+ *  void set_vel (int v);
  *
  */
 
@@ -32,20 +33,16 @@ public class Personaje implements Runnable {
     private static int PIXELS_TOLERANCE_FOR_RESIZE = 10;
     private Sprite sprite;
     private Image image;
-    private boolean live = true;
-    private int scale = 100;      //esto es segun el tamaño de la imagen Y PANTALLA
-    
-      
+    private boolean alive = true;
     private Thread tpers;
+    private int velocity = 70;
 
     
     
     public Personaje (String nomImg, int px, int py,int width, int height, int scale)
     {
         int nx, ny; //numero de cuadros en X y en Y
-        this.scale = scale;
-
-        
+         
         try {
             //cargamos la imagen
             image = Image.createImage(getClass().getResourceAsStream(nomImg));
@@ -64,15 +61,17 @@ public class Personaje implements Runnable {
                         Math.abs(iy - image.getHeight()) > PIXELS_TOLERANCE_FOR_RESIZE){
                     //hacemos un resize porque es mayor
                     this.image = Resizer.resizeImage(image, ix, iy);
+                    
                     this.sprite = new Sprite(image, (int)(width *factor),
-                           (int)(height * factor));
+                            (int)(height * factor));
+                    
                 } else {
                     //no hacemos ningun resize
                     this.sprite = new Sprite(image, width,height);
                 }
         
             //seteamos el pixel de referencia justo en el medio de la imagen
-            set_pixRef(px * scale / 200, py * scale / 200);
+            set_pixRef((int)(width *factor) / 2, (int)(height * factor) / 2);
             this.tpers=new Thread(this);
             this.tpers.start();
             }
@@ -84,18 +83,18 @@ public class Personaje implements Runnable {
     public void set_alive (boolean b)
     {
         if (b == true) {
-            if (!this.live) {
+            if (!this.alive) {
+                this.alive = true;
                 this.tpers=new Thread(this);
                 tpers.start();  //chequear esto
-                this.live = true;
-            }
-        } else {
-            this.live = false;
+            }             
+        } else {            
+            this.alive = false;
         }
     }
     public boolean is_alive ()
     {
-        return this.live;
+        return this.alive;
     }
 
     public void set_visible (boolean b)
@@ -143,17 +142,17 @@ public class Personaje implements Runnable {
     {
         this.sprite.setTransform(t);
     }
-    
-    
-    
-    
-    
+    public void set_velocity (int v)
+    {
+        this.velocity = v;
+    }
+
     public void run () {       
-        while (this.live) {
+        while (this.alive) {
             this.sprite.nextFrame();            
             
             try {
-                Thread.sleep(70);
+                Thread.sleep(this.velocity);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -161,10 +160,7 @@ public class Personaje implements Runnable {
     }
   
     /*****************   ADICONALES   ****************************************/
-    
-   
-         
-  
+    /*
     private int[] reescalaArray(int[] ini, int x, int y, int x2, int y2) {
     int out[] = new int[x2*y2];
     int dy, dx;
@@ -177,10 +173,7 @@ public class Personaje implements Runnable {
     }
         return out;  
     }
-
-     private int resizeScale (int s) //obtenemos una verdadera escala
-     {
-         return 3;
-     }
+*/
+   
     
 }
