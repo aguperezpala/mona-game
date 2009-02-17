@@ -6,6 +6,7 @@ import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.lcdui.game.LayerManager;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Font;
 
 class SSCanvas extends Canvas implements Runnable{
 
@@ -16,9 +17,12 @@ class SSCanvas extends Canvas implements Runnable{
 	 public boolean activo=false;
          private Random random=new Random();
          private int puntaje;
-         private Personaje subZero = new Personaje("tira_mona_paso1.png", this.getWidth(), this.getHeight(), 100, 150, 60);
+         private Personaje subZero = new Personaje("tira_mona_paso1.png", this.getWidth(), this.getHeight(), 100, 150, 70);
          private LayerManager lmanager;
          private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
+         private Sprite bienAhi;
+         
+
        
          public SSCanvas()
          {         
@@ -30,6 +34,8 @@ class SSCanvas extends Canvas implements Runnable{
            //lmanager.insert(subZero.getSprite(), 0);
            lmanager.append(subZero.getSprite());
            luces.setNumberOfObjects(3);
+           bienAhi = Resizer.spriteResized("bien_ahi.png", this.getWidth(), this.getHeight(), 0);
+           lmanager.append(bienAhi);
            
        
 	 }
@@ -94,11 +100,20 @@ public void keyReleased (int keyCode) {
 
 public void paint (Graphics g)
 {
+
     g.setColor(0,0,0);
     g.fillRect(0,0,getWidth(),getHeight());
     luces.paint(g);
     lmanager.paint(g, 0, 0);
-    g.drawString("PUNTAJE: "+ subZero.getSprite().getFrame(), 50, 10, 0);
+    g.setColor(255, 0, 0);
+    g.setFont(Font.getFont(Font.FONT_STATIC_TEXT, Font.STYLE_ITALIC, Font.SIZE_LARGE));
+    g.drawString("BIEN AHI!!", 50, 10, 0);
+    g.setFont(Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE));
+    g.drawString("BIEN AHI!!", 50, 25, 0);
+    g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
+    g.drawString("BIEN AHI!!", 50, 40, 0);
+    //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
+
 
 }
 

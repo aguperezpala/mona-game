@@ -18,7 +18,6 @@ import java.util.Vector;
 public class Efecto implements Runnable{
     
     private Sprite sprite;
-    private Image image;
     private boolean alive = true;
     private boolean withTransformation = true;
     private int screenWidth;
@@ -43,6 +42,7 @@ public class Efecto implements Runnable{
     public Efecto (String nomImg, int px, int py, int scale)
     {
       //  this.g = g;
+        Image image;
         this.screenHeight = py;
         this.screenWidth = px;
         this.rand = new Random();
@@ -53,7 +53,8 @@ public class Efecto implements Runnable{
             image = Image.createImage(getClass().getResourceAsStream(nomImg));
             float factor = Resizer.getFactor(py, image.getHeight(), scale);
 
-            this.image = Resizer.resizeImage(image, (int) (image.getWidth() * factor),
+            //aca se puede usar Resizer.resizeImage o resizeBitmap
+            image = Resizer.resizeBitmap(image, (int) (image.getWidth() * factor),
                     (int) (image.getHeight() * factor));
             this.sprite = new Sprite(image);
                 

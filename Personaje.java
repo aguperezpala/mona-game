@@ -32,7 +32,6 @@ public class Personaje implements Runnable {
 
     private static int PIXELS_TOLERANCE_FOR_RESIZE = 10;
     private Sprite sprite;
-    private Image image;
     private boolean alive = true;
     private Thread tpers;
     private int velocity = 70;
@@ -42,7 +41,7 @@ public class Personaje implements Runnable {
     public Personaje (String nomImg, int px, int py,int width, int height, int scale)
     {
         int nx, ny; //numero de cuadros en X y en Y
-         
+         Image image;
         try {
             //cargamos la imagen
             image = Image.createImage(getClass().getResourceAsStream(nomImg));
@@ -51,16 +50,16 @@ public class Personaje implements Runnable {
                 //calculamos cantidad de cuadros en filas y columnas
                 nx = image.getWidth() / width;
                 ny = image.getHeight() / height;
-                float factor = Resizer.getFactor(py, image.getHeight(), scale);
+                float factor = Resizer.getFactor(py, height, scale);
 
                 ix = ((int)(width * factor))*nx;
                 iy = ((int)(height * factor))*ny;
-                
+                                
                 
                 if (Math.abs(ix - image.getWidth()) > PIXELS_TOLERANCE_FOR_RESIZE &&
                         Math.abs(iy - image.getHeight()) > PIXELS_TOLERANCE_FOR_RESIZE){
                     //hacemos un resize porque es mayor
-                    this.image = Resizer.resizeImage(image, ix, iy);
+                    image = Resizer.resizeImage(image, ix, iy);
                     
                     this.sprite = new Sprite(image, (int)(width *factor),
                             (int)(height * factor));
