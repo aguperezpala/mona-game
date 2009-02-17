@@ -1,5 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
+ * 
  * and open the template in the editor.
  */
 
@@ -17,8 +17,8 @@ public class Cartel implements Runnable {
     
     
     private Sprite sprite;
-    private int velocity;
-    private boolean alive = true;
+    private int timeToShow = 600;
+    private boolean alive = false;
     Thread tcartel;
 
 
@@ -26,7 +26,8 @@ public class Cartel implements Runnable {
     
     public Cartel (String nomImg, int px, int py, int scale)
     {
-        this.sprite = Resizer.spriteResized(nomImg, px, py, scale);
+        this.sprite = Resizer.spriteResized(nomImg, px, py, scale, true);
+        this.sprite.setVisible(false);
     }
     
     
@@ -43,23 +44,37 @@ public class Cartel implements Runnable {
                 this.tcartel=new Thread(this);
                 tcartel.start();  //chequear esto
             }             
-        } else {            
+        } else {
+             this.sprite.setVisible(false);
             this.alive = false;
         }
     }
-    public void setVelocity(int v)
+    public void setTimeToShow(int v)
     {
-        this.velocity = v;
+        this.timeToShow = v;
     }
     public void setPos(int x, int y)
     {
-        this.sprite.setPosition(x, y);
+        this.sprite.setRefPixelPosition(x, y);
+    }
+
+    public void show ()
+    {
+        this.setAlive(true);
+    }
+    public void hide ()
+    {
+        this.setAlive(false);
+    }
+    public Sprite getSprite()
+    {
+        return this.sprite;
     }
 
     public void run ()
     {
         try {
-            Thread.sleep(this.velocity);
+            Thread.sleep(this.timeToShow);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }

@@ -7,7 +7,7 @@ import javax.microedition.lcdui.*;
 public class Resizer {
 
      //Si scale = 0 entonces no se hace ningun resize de la imagen
-    static Sprite spriteResized (String nomImg, int px, int py, int scale)
+    static Sprite spriteResized (String nomImg, int px, int py, int scale, boolean alpha)
     {
         Image image;
         Sprite sprite = null;
@@ -16,9 +16,13 @@ public class Resizer {
             image = Image.createImage("/hello/" + nomImg);
             if (scale != 0) {
                 float factor = Resizer.getFactor(py, image.getHeight(), scale);
-
-                image = resizeImage(image, (int) (image.getWidth() * factor),
-                    (int) (image.getHeight() * factor));                
+                
+                if (alpha) 
+                    image = resizeBitmap(image, (int) (image.getWidth() * factor),
+                        (int) (image.getHeight() * factor));
+                else
+                    image = resizeImage(image, (int) (image.getWidth() * factor),
+                        (int) (image.getHeight() * factor));                
             }
             
             sprite = new Sprite(image);
