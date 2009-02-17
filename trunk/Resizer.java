@@ -6,7 +6,31 @@ import javax.microedition.lcdui.*;
 
 public class Resizer {
 
-    
+     //Si scale = 0 entonces no se hace ningun resize de la imagen
+    static Sprite spriteResized (String nomImg, int px, int py, int scale)
+    {
+        Image image;
+        Sprite sprite = null;
+         try {
+            //cargamos la imagen
+            image = Image.createImage("/hello/" + nomImg);
+            if (scale != 0) {
+                float factor = Resizer.getFactor(py, image.getHeight(), scale);
+
+                image = resizeImage(image, (int) (image.getWidth() * factor),
+                    (int) (image.getHeight() * factor));                
+            }
+            
+            sprite = new Sprite(image);
+                
+            //seteamos el pixel de referencia justo en el medio de la imagen
+            sprite.defineReferencePixel(image.getWidth() / 2, image.getHeight() / 2);
+            
+            
+        } catch (Exception e){System.out.print("Error creando sprite "+nomImg+"\n");}
+
+        return sprite;
+    }
      static Image resizeImage(Image src, float factor) {
       return resizeImage(src, (int) (src.getWidth() * factor), (int) (src.getHeight() * factor));
       }//resize image
@@ -53,7 +77,48 @@ public class Resizer {
     {        
         return (float) ((float)(scale * screenSize)/(float)(100 * imageSize));        
     }
-    
+
+    private static int[] rescaleArray(int[] ini, int x, int y, int x2, int y2)
+	{
+		int out[] = new int[x2*y2];
+		for (int yy = 0; yy < y2; yy++)
+		{
+			int dy = yy * y / y2;
+			for (int xx = 0; xx < x2; xx++)
+			{
+				int dx = xx * x / x2;
+				out[(x2 * yy) + xx] = ini[(x * dy) + dx];
+			}
+		}
+		return out;
+	}
+
+
+	public static Image resizeBitmap(Image image, int width, int height)
+	{
+		// Note from DCC:
+		// an int being 4 bytes is large enough for Alpha/Red/Green/Blue in an 8-bit plane...
+		// my brain was fried for a little while here because I am used to larger plane sizes for each
+		// of the color channels....
+		//
+
+		//Need an array (for RGB, with the size of original image)
+		//
+                //System.out.print("image.getWidth()*image.getHeight():" + image.getWidth()*image.getHeight() + "\n");
+            
+		int rgb[] = new int[image.getWidth()*image.getHeight()];
+		//Get the RGB array of image into "rgb"
+		//
+		image.getRGB(rgb, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+		//Call to our function and obtain RGB2
+		//
+		int rgb2[] = rescaleArray(rgb, image.getWidth(), image.getHeight(), width, height);
+		//Create an image with that RGB array
+		//
+		Image temp2 = Image.createRGBImage(rgb2, width, height, true);
+
+		return temp2;
+	}
   
 
 }
