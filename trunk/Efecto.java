@@ -9,8 +9,8 @@ package hello;
 
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.game.Sprite;
-//import java.util.Random;
-//import java.util.Vector;
+import java.util.Random;
+import java.util.Vector;
 /**
  *
  * @author agustin
