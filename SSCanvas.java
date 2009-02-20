@@ -23,7 +23,7 @@ class SSCanvas extends Canvas implements Runnable{
          private Cartel bienAhi;
          private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
          //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
-         private BotonManager btnmng = new BotonManager ("luz.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+         private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
 
        
          public SSCanvas()
@@ -88,6 +88,14 @@ class SSCanvas extends Canvas implements Runnable{
 
                     case RIGHT:
                         bienAhi.show();
+                        this.b
+                        break;
+                    case UP:
+
+                        break;
+                    case DOWN:
+
+                        break;
 	        }
 	    }
 public void keyReleased (int keyCode) {

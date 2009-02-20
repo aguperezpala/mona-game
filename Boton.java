@@ -48,6 +48,10 @@ public class Boton {
     {
         this.orientation = o;
     }
+    public int getOrientation ()
+    {
+        return this.orientation;
+    }
 
     public int getDiametro ()
     {
@@ -73,6 +77,10 @@ public class Boton {
     {
         this.color = rgb;
     }
+    public int getColor ()
+    {
+        return this.color;
+    }
     public void setPosition (int x, int y)
     {
         this.x = x;
@@ -81,7 +89,7 @@ public class Boton {
         this.sY = this.y + this.diametro/2;
     }
     
-     public int getRedColor ()
+     public int getReedColor ()
      {
          int r;
          r=(this.color & 0x00FF0000)>>16;
