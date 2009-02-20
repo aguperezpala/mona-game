@@ -22,6 +22,9 @@ public class BotonManager implements Runnable{
 
     /* CONFIGURACIONES */
     static final int BLUE_TIME = 8;
+    static final int MULT_POINTS_BLUE = 10;
+    static final int MULT_POINTS_GREEN = 5;
+    static final int MULT_POINTS_REED = 2;
     
     //debe ser multiplo de 255, es la var que controla que tan rapido cambia de color
     static final int COLOR_CHANGE_VELOCITY = 17; 
@@ -34,12 +37,16 @@ public class BotonManager implements Runnable{
      * Abajo     = 3
     */
 
+    static final int IZQUIERDA = 0;
+    static final int DERECHA = 1;
+    static final int ARRIBA = 2;
+    static final int ABAJO = 3;
     static final int orientations[] = {Sprite.TRANS_NONE, Sprite.TRANS_MIRROR,
-    Sprite.TRANS_ROT270, Sprite.TRANS_ROT90};
+    Sprite.TRANS_ROT90, Sprite.TRANS_ROT270};
+    
    
-    //private int numOfButtons;
+    private int points = 0;
     private Sprite sprite;      //flecha
-    //private int distBetwenButtons;
     private boolean alive;
     private int velocity = 50;
     private Boton boton[] = new Boton[3];
@@ -111,6 +118,54 @@ public class BotonManager implements Runnable{
         }
     }
 
+    private int getPoints(int p)
+    {
+        return (p/10) + 1;
+    }
+    //Funcion que es llamada cuando se produce un acierto
+    private void doAcert()
+    {
+        /* Los puntos los vamos a determinar segun el color que tenga el boton
+         * Hay 2 posibilidades:
+         * - Que este en azul con verde.
+         * - Que este en verde con rojo.
+         * Vamos a calcular los puntos de la siguiente manera:
+         * Vamos a tener 3 multiplicadores, xblue,xgreen,xreed. Vamos a obtener
+         * cada porcentaje de color y comparar entre si, y segun eso multiplicar
+         * por el multiplicador correspondiente.
+        */
+        int reed = this.boton[this.actualButton].getReedColor();
+        int green = this.boton[this.actualButton].getGreenColor();
+        int blue = this.boton[this.actualButton].getBlueColor();
+
+        //desactivamos el boton
+        this.boton[this.actualButton].setActive(false);
+
+        if (blue != 0) {
+            //entonces estamos en el caso azul/verde
+            if (blue >= green) {
+                this.points += this.getPoints(blue) * MULT_POINTS_BLUE;
+            } else {
+                this.points += this.getPoints(green) * MULT_POINTS_GREEN;
+            }
+        } else {
+            //estamos en el caso verde/rojo
+            if (green >= reed) {
+                this.points += this.getPoints(green) * MULT_POINTS_GREEN;
+            } else {
+                this.points += this.getPoints(reed) * MULT_POINTS_REED;
+            }
+        }
+    }
+    
+    public void pushButton (int button)
+    {
+        if (this.boton[this.actualButton].getOrientation() == button) {
+                    //si apretamos el correcto entonces:
+                    this.doAcert();
+        }                
+    }
+
     public void run ()
     {
         int actualColor;
@@ -167,6 +222,8 @@ public class BotonManager implements Runnable{
             if (boton[i].isAlive())
                 boton[i].paint(g);
         }
+        //graficamos momentaneamente los puntos
+        g.drawString("PUNTOS: "+ this.points, 50, 23, 0);
 
     }
     
