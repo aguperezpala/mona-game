@@ -62,7 +62,7 @@ public class Efecto implements Runnable{
             this.sprite.defineReferencePixel(image.getWidth() / 2, image.getHeight() / 2);
             this.tefecto=new Thread(this);
             this.tefecto.start();
-            this.setNumberOfObjects(5);
+            this.setNumberOfObjects(2);
             
         } catch (Exception e){System.out.print("Error creando sprite "+nomImg+"\n");}
        
@@ -93,7 +93,7 @@ public class Efecto implements Runnable{
                 elems.addElement(p);
             }
         } else {
-            
+            //deberiamos borrar elementos
         }
     }
     public void activeTransformations(boolean b)
