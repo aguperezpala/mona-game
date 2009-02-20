@@ -21,9 +21,9 @@ class SSCanvas extends Canvas implements Runnable{
          private LayerManager lmanager;
          private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
          private Cartel bienAhi;
-        // private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 5, false);
+         private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
          //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
-         
+         private BotonManager btnmng = new BotonManager ("luz.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
 
        
          public SSCanvas()
@@ -40,10 +40,12 @@ class SSCanvas extends Canvas implements Runnable{
            bienAhi = new Cartel("bien_ahi.png", this.getWidth(),this.getHeight(),10);
            bienAhi.setPos(this.getWidth()/2, 0);
            lmanager.append(bienAhi.getSprite());
+           btnmng.setAlive(true);
           /* derecha.setColor(0x0fffffff);
            derecha.setAlive(true);
            derecha.setPosition(150, 100);
            */
+           flecha.setPosition(0, 0);
        
 	 }
 	 
@@ -71,7 +73,9 @@ class SSCanvas extends Canvas implements Runnable{
 
 	        switch (action) {
                     case FIRE:
-                        subZero.set_alive(true);         
+                        subZero.set_alive(true);
+                        flecha.setTransform(Sprite.TRANS_ROT90);
+                        flecha.setPosition(0, 0);
                         break;
                     case KEY_NUM5:
          
@@ -124,6 +128,9 @@ public void paint (Graphics g)
     g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
     //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
     //derecha.paint(g);
+    flecha.paint(g);
+
+    this.btnmng.paint(g);
 
 
 }
