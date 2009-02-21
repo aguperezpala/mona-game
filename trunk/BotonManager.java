@@ -140,6 +140,7 @@ public class BotonManager implements Runnable{
 
         //desactivamos el boton
         this.boton[this.actualButton].setActive(false);
+        this.actualButton = (this.actualButton + 1) % 4;
 
         if (blue != 0) {
             //entonces estamos en el caso azul/verde
@@ -160,7 +161,7 @@ public class BotonManager implements Runnable{
     
     public void pushButton (int button)
     {
-        if (this.boton[this.actualButton].getOrientation() == button) {
+        if (this.boton[this.actualButton].getOrientation() == this.orientations[button]) {
                     //si apretamos el correcto entonces:
                     this.doAcert();
         }                
@@ -174,8 +175,12 @@ public class BotonManager implements Runnable{
             actualColor = 255;
             this.actualButton = 0;  //el primer boton no fue apretado todavia
             //seteamos los colores principales
-            for (int i = 0; i < 3; i++)
-                boton[i].setColor(0x000000FF);//seteamos todo azul
+            for (int i = 0; i < 3; i++) {
+                this.boton[i].setColor(0x000000FF);//seteamos todo azul
+                this.boton[i].setActive(true);     //activamos todos los botones
+                //ahora le vamos a setear un random de orientacion
+                this.boton[i].setOrientation(BotonManager.orientations[rnd.nextInt(4)]);
+            }
 
             
             //******     TRANSFORMACION DE AZUL A VERDE **************
