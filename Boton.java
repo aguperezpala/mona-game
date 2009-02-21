@@ -71,7 +71,7 @@ public class Boton {
     }
     public boolean isActive ()
     {
-        return this.alive;
+        return this.active;
     }
     public void setColor (int rgb)
     {

@@ -83,18 +83,18 @@ class SSCanvas extends Canvas implements Runnable{
 	            case LEFT:
                         subZero.set_transformation(Sprite.TRANS_MIRROR);
                         subZero.set_alive(false);
-         
+                        this.btnmng.pushButton(BotonManager.IZQUIERDA);         
 	            	break;
 
                     case RIGHT:
                         bienAhi.show();
-                        this.b
+                        this.btnmng.pushButton(BotonManager.DERECHA);
                         break;
                     case UP:
-
+                        this.btnmng.pushButton(BotonManager.ARRIBA);
                         break;
                     case DOWN:
-
+                        this.btnmng.pushButton(BotonManager.ABAJO);
                         break;
 	        }
 	    }
