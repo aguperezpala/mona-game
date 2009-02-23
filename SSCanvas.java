@@ -23,12 +23,11 @@ class SSCanvas extends Canvas implements Runnable{
          private Cartel bienAhi;
          private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
          //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
-         private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+         private BotonManager btnmng = new BotonManager ("flecha1.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
 
        
          public SSCanvas()
-         {
-         
+         {         
            //random.setSeed(System.currentTimeMillis());
            subZero.set_pos(this.getWidth()/2, this.getHeight()/2);
            //subZero.set_transformation(subZero.getSprite().TRANS_MIRROR);
