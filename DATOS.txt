@@ -1,0 +1,8 @@
+***************	FALTA	TERMINAR	***********************
+* SoundPlayer: se pueda escuchar otro midi (cambiar de tema).
+* Personaje: Agregar mas animaciones y ver como cambiar la secuencia de las 
+			 animaciones.
+* Menues: Menu principal.
+		  Menu creditos.
+* Publicidad (donde como y cuando aparece).
+* SSCanvas: Pasarlo en limpio.
