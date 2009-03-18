@@ -21,9 +21,10 @@ class SSCanvas extends Canvas implements Runnable{
          private LayerManager lmanager;
          private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
          private Cartel bienAhi;
-         private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
+         //private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
          //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
-         private BotonManager btnmng = new BotonManager ("flecha1.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+         private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+         private SoundPlayer sp = new SoundPlayer ("tema1.mid");
 
        
          public SSCanvas()
@@ -37,14 +38,16 @@ class SSCanvas extends Canvas implements Runnable{
            lmanager.append(subZero.getSprite());
            luces.setNumberOfObjects(3);
            bienAhi = new Cartel("bien_ahi.png", this.getWidth(),this.getHeight(),10);
-           bienAhi.setPos(this.getWidth()/2, 0);
+           bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
            lmanager.append(bienAhi.getSprite());
            btnmng.setAlive(true);
           /* derecha.setColor(0x0fffffff);
            derecha.setAlive(true);
            derecha.setPosition(150, 100);
            */
-           flecha.setPosition(0, 0);
+          // flecha.setPosition(0, 0);
+           subZero.set_velocity(100);
+           sp.startMusic();
        
 	 }
 	 
@@ -71,17 +74,15 @@ class SSCanvas extends Canvas implements Runnable{
 	        int action=getGameAction(keyCode);
 
 	        switch (action) {
-                    case FIRE:
-                        subZero.set_alive(true);
-                        flecha.setTransform(Sprite.TRANS_ROT90);
-                        flecha.setPosition(0, 0);
+                    case FIRE:                        
+                      //  flecha.setTransform(Sprite.TRANS_ROT90);
+                       // flecha.setPosition(0, 0);
                         break;
                     case KEY_NUM5:
          
                         break;
 	            case LEFT:
                         subZero.set_transformation(Sprite.TRANS_MIRROR);
-                        subZero.set_alive(false);
                         this.btnmng.pushButton(BotonManager.IZQUIERDA);         
 	            	break;
 
@@ -132,10 +133,10 @@ public void paint (Graphics g)
     //g.setFont(Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE));
     //g.drawString("BIEN AHI!!", 50, 25, 0);
     g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
-    g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
+ //   g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
     //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
     //derecha.paint(g);
-    flecha.paint(g);
+//    flecha.paint(g);
 
     this.btnmng.paint(g);
 

@@ -11,7 +11,7 @@ import javax.microedition.lcdui.*;
 /**
  * @author agustin
  */
-public class HelloMIDlet extends MIDlet {
+public class HelloMIDlet extends MIDlet implements CommandListener {
 
   private boolean midletPaused = false;
 
@@ -34,8 +34,7 @@ public class HelloMIDlet extends MIDlet {
          //Connection aguc;//=Connector.open("file:/root1/Readme.txt", Connector.READ);
 	 screen=new SSCanvas();
 	 screen.addCommand(exitCommand);
-
-         
+         screen.setCommandListener(this);
 	 
          
     }
@@ -120,7 +119,14 @@ public class HelloMIDlet extends MIDlet {
 
 
 
-
+public void commandAction(Command c, Displayable s) {
+    	 if (c == exitCommand) {             
+	  destroyApp(false);
+	  notifyDestroyed();
+	 }
+         
+	 
+}
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: image ">//GEN-BEGIN:|27-getter|0|27-preInit
     /**
