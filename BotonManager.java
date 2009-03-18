@@ -27,7 +27,7 @@ public class BotonManager implements Runnable{
     static final int MULT_POINTS_REED = 2;
     
     //debe ser multiplo de 255, es la var que controla que tan rapido cambia de color
-    static final int COLOR_CHANGE_VELOCITY = 17; 
+    static final int COLOR_CHANGE_VELOCITY = 5; 
 
 
     /*                      ORIENTACIONES
