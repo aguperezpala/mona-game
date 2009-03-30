@@ -49,7 +49,7 @@ public class HelloMIDlet extends MIDlet implements CommandListener {
      */
     private void initialize() {//GEN-END:|0-initialize|0|0-preInitialize
         // write pre-initialize user code here
-         display.setCurrent(screen);
+        display.setCurrent(screen);
         new Thread(screen).start();
 //GEN-LINE:|0-initialize|1|0-postInitialize
         // write post-initialize user code here
@@ -73,6 +73,9 @@ public class HelloMIDlet extends MIDlet implements CommandListener {
      */
     public void resumeMIDlet() {//GEN-END:|4-resumeMIDlet|0|4-preAction
         // write pre-action user code here
+        display.setCurrent(screen);
+        new Thread(screen).start();
+        System.out.print("SE RESUMIO\n");
 //GEN-LINE:|4-resumeMIDlet|1|4-postAction
         // write post-action user code here
     }//GEN-BEGIN:|4-resumeMIDlet|2|
@@ -128,24 +131,26 @@ public void commandAction(Command c, Displayable s) {
 	 
 }
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: image ">//GEN-BEGIN:|27-getter|0|27-preInit
-    /**
-     * Returns an initiliazed instance of image component.
-     * @return the initialized component instance
-     */
-    public Image getImage() {
-        if (image == null) {//GEN-END:|27-getter|0|27-preInit
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: image ">//GEN-BEGIN:|27-getter|0|27-preInit
+/**
+ * Returns an initiliazed instance of image component.
+ * @return the initialized component instance
+ */
+public Image getImage() {
+    if (image == null) {//GEN-END:|27-getter|0|27-preInit
             // write pre-init user code here
-            try {//GEN-BEGIN:|27-getter|1|27-@java.io.IOException
-                image = Image.createImage("/hello/golpe.png");
-            } catch (java.io.IOException e) {//GEN-END:|27-getter|1|27-@java.io.IOException
+        try {//GEN-BEGIN:|27-getter|1|27-@java.io.IOException
+            image = Image.createImage("/hello/golpe.png");
+        } catch (java.io.IOException e) {//GEN-END:|27-getter|1|27-@java.io.IOException
                 e.printStackTrace();
-            }//GEN-LINE:|27-getter|2|27-postInit
+        }//GEN-LINE:|27-getter|2|27-postInit
             // write post-init user code here
-        }//GEN-BEGIN:|27-getter|3|
-        return image;
-    }
-    //</editor-fold>//GEN-END:|27-getter|3|
+    }//GEN-BEGIN:|27-getter|3|
+    return image;
+}
+//</editor-fold>//GEN-END:|27-getter|3|
+
+
 
     /**
      * Returns a display instance.
@@ -183,6 +188,8 @@ public void commandAction(Command c, Displayable s) {
      */
     public void pauseApp() {
         midletPaused = true;
+        screen.GamePause(true);
+        System.out.print("SE PUSO EN PAUSA\n");
     }
 
     /**
