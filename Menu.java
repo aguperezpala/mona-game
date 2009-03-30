@@ -183,5 +183,11 @@ class Menu extends Canvas implements Runnable {
              this.response[0] = this.actualOps;
              this.alive = false;    /*finalizamos el thread*/             
          }
+         private void destroyMenu()
+         {
+             this.backImg = null;
+             this.selectorImg = null;
+             this.alive = false;
+         }
 
 }
