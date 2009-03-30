@@ -98,6 +98,17 @@ class SSCanvas extends Canvas implements Runnable{
                         break;
 	        }
 	    }
+            public void GamePause (boolean t)
+            {
+                if (t) {
+                    subZero.set_alive(!t);
+                    this.btnmng.setAlive(!t);
+                    this.sp.stop();
+                    this.activo = !t;
+                }
+
+            }
+
 public void keyReleased (int keyCode) {
     int action=getGameAction(keyCode);
 
