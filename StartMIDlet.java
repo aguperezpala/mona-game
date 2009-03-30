@@ -4,6 +4,7 @@
  * inicialize().
  * Terminar de revisar las marcas (lineas marcadas) y terminar de probar el
  * juego (SSCanvas game).
+ * Fijarse en game.GamePause(false) que lo que hace, reanimar a todos los elementos
  * 
  */
 
@@ -247,6 +248,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                 game.GamePause(false);                
             }
         } else {
+            System.out.print("Estamos creando el juego\n");
             game = new SSCanvas();
             game.setCommandListener(this);
             tgame = new Thread (game);
