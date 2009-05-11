@@ -133,7 +133,7 @@ public class BotonManager implements Runnable{
 
     private int getPoints(int p)
     {
-        return ((p/10) + 1) * this.globalMultiplier;
+        return ((p/100) + 1) * this.globalMultiplier;
     }
     //Funcion que es llamada cuando se produce un acierto
     private void doAcert()
@@ -154,7 +154,7 @@ public class BotonManager implements Runnable{
         //desactivamos el boton
         this.boton[this.actualButton].setActive(false);
         this.buttonsInactive++;
-        this.actualButton = (this.actualButton + 1) % 4;
+        this.actualButton = (this.actualButton + 1) % this.boton.length;
 
         if (blue != 0) {
             //entonces estamos en el caso azul/verde
@@ -221,7 +221,7 @@ public class BotonManager implements Runnable{
             while (actualColor > 0 && buttonsInactive < 3) {
                 actualColor = actualColor - BotonManager.COLOR_CHANGE_VELOCITY;
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = buttonsInactive; i < 3; i++) {
                     //if (boton[i].isActive()) {  //si esta activo cambiamos de color
                         //le ponemos el color azul y verde combinados
                     boton[i].setColor((actualColor << 8) | ((Math.abs(255-actualColor)) << 16));
@@ -239,7 +239,7 @@ public class BotonManager implements Runnable{
             this.finish = true;
 
 
-             try {Thread.sleep(this.velocity*2);} catch (InterruptedException ex) {
+             try {Thread.sleep(this.velocity+200);} catch (InterruptedException ex) {
                  ex.printStackTrace();
              }
         }
