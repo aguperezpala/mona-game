@@ -66,7 +66,7 @@ public class BotonManager implements Runnable{
     private Random rnd = new Random();
     private int actualButton = 0;
     Thread tbm;
-    
+    private int buttonsInactive = 0;
 
     /* Constructor:
      * Requires:
@@ -153,6 +153,7 @@ public class BotonManager implements Runnable{
 
         //desactivamos el boton
         this.boton[this.actualButton].setActive(false);
+        this.buttonsInactive++;
         this.actualButton = (this.actualButton + 1) % 4;
 
         if (blue != 0) {
@@ -184,11 +185,13 @@ public class BotonManager implements Runnable{
     {
         int actualColor = 0;
         
+        
         while (this.alive)
         {            
             this.finish = false;
             this.finishOk = false;
             actualColor = 255;
+            buttonsInactive = 0;
             this.actualButton = 0;  //el primer boton no fue apretado todavia
             //seteamos los colores principales
             for (int i = 0; i < 3; i++) {
@@ -200,14 +203,14 @@ public class BotonManager implements Runnable{
 
             
             //******     TRANSFORMACION DE AZUL A VERDE **************
-            while (actualColor > 0) {
+            while (actualColor > 0 && buttonsInactive < 3) {
                 actualColor = actualColor - this.COLOR_CHANGE_VELOCITY;
 
-                for (int i = 0; i < 3; i++) {
-                    if (boton[i].isActive()) {  //si esta activo cambiamos de color
+                for (int i = buttonsInactive; i < 3; i++) {
+                  //  if (boton[i].isActive()) {  //si esta activo cambiamos de color
                         //le ponemos el color azul y verde combinados
-                        boton[i].setColor(actualColor | ((Math.abs(255-actualColor)) << 8));
-                    }                    
+                    boton[i].setColor(actualColor | ((Math.abs(255-actualColor)) << 8));
+                    //}
                 }
                 try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
                  ex.printStackTrace();
@@ -215,14 +218,14 @@ public class BotonManager implements Runnable{
             }            
             //******     TRANSFORMACION DE VERDE A ROJO **************
             actualColor = 255;
-            while (actualColor > 0) {
+            while (actualColor > 0 && buttonsInactive < 3) {
                 actualColor = actualColor - BotonManager.COLOR_CHANGE_VELOCITY;
 
                 for (int i = 0; i < 3; i++) {
-                    if (boton[i].isActive()) {  //si esta activo cambiamos de color
+                    //if (boton[i].isActive()) {  //si esta activo cambiamos de color
                         //le ponemos el color azul y verde combinados
-                        boton[i].setColor((actualColor << 8) | ((Math.abs(255-actualColor)) << 16));
-                    }                    
+                    boton[i].setColor((actualColor << 8) | ((Math.abs(255-actualColor)) << 16));
+                    //}
                 }
                 try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
                  ex.printStackTrace();
@@ -236,7 +239,7 @@ public class BotonManager implements Runnable{
             this.finish = true;
 
 
-             try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
+             try {Thread.sleep(this.velocity*2);} catch (InterruptedException ex) {
                  ex.printStackTrace();
              }
         }
