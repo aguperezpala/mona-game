@@ -54,7 +54,8 @@ class SSCanvas extends Canvas implements Runnable{
 	 
 	 public void run() {
 	        //this.activo=false;
-            
+            int lastMultiplier = 0;
+            int actualMultiplier = 0;
              
                   while (true) {                 
                     repaint();
@@ -71,11 +72,18 @@ class SSCanvas extends Canvas implements Runnable{
                         /* (1) */
                         if (btnmng.isFinishOk()) {
                             /* si termino ok aumentamos el multiplyer */
-                            btnmng.setNextMultiplier();
+                            actualMultiplier = btnmng.setNextMultiplier();
+                            if (actualMultiplier > lastMultiplier) {
+                                /* mostramos un "bien ahi" pòrque aumento de nivel */
+                                 bienAhi.show();
+                                 /* deberiamos cambiar el "multiplicador" (imagen) */
+                                 lastMultiplier = actualMultiplier;
+                            }
                         } else {
                             /* tenemos 2 posibilidades, o resetearlo al multiplicador
                              * 1 o bajarlo de a uno*/
-                            btnmng.setPrevMultiplier();
+                            actualMultiplier = btnmng.setPrevMultiplier();
+                            lastMultiplier = actualMultiplier;
                         }
 
 
@@ -110,7 +118,6 @@ class SSCanvas extends Canvas implements Runnable{
 	            	break;
 
                     case RIGHT:
-                        bienAhi.show();
                         this.btnmng.pushButton(BotonManager.DERECHA);
                         break;
                     case UP:
