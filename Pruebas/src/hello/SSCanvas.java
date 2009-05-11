@@ -59,6 +59,29 @@ class SSCanvas extends Canvas implements Runnable{
                   while (true) {                 
                     repaint();
                     serviceRepaints();
+                    if (btnmng.isFinish()) {
+                        /* debemos hacer:
+                         * 1) sacar determinar el multiplicador y/o
+                         * sacar el multiplicador en caso de no haber terminado
+                         * correctamente la secuencia.
+                         * 2) Mostrar el cartel si una sola vez? o lo mostramos
+                         * durante todo el tiempo?
+                         */
+
+                        /* (1) */
+                        if (btnmng.isFinishOk()) {
+                            /* si termino ok aumentamos el multiplyer */
+                            btnmng.setNextMultiplier();
+                        } else {
+                            /* tenemos 2 posibilidades, o resetearlo al multiplicador
+                             * 1 o bajarlo de a uno*/
+                            btnmng.setPrevMultiplier();
+                        }
+
+
+
+                        btnmng.setIsFinish(false);
+                    }
 
                     try {
 	                Thread.sleep(5);
@@ -110,7 +133,7 @@ class SSCanvas extends Canvas implements Runnable{
             }
 
 public void keyReleased (int keyCode) {
-    int action=getGameAction(keyCode);
+   /* int action=getGameAction(keyCode);
 
     switch (action) {
 
@@ -128,7 +151,7 @@ public void keyReleased (int keyCode) {
         //	miSprite.setY(miSprite.getY()-5);
             break;
         
-    }
+    }*/
 }
 
 public void paint (Graphics g)

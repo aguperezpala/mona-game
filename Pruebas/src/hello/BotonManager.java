@@ -44,9 +44,15 @@ public class BotonManager implements Runnable{
     static final int orientations[] = {Sprite.TRANS_NONE, Sprite.TRANS_MIRROR,
     Sprite.TRANS_ROT90, Sprite.TRANS_ROT270};
     
-   
+
+    /* Vamos a modificar la velocidad gradualmente segun una constante para cada
+     * "multiplicador"
+     */
+    private final int VELOCITY_MULTIPLIER_FACTOR = 10;
+    private int globalMultiplier = 1;   /* lo vamos a usar para el "X1" X2"...etc */
     private int points = 0;
     private boolean finish = false;     /* flag que determina el final de cada secuencia */
+    private boolean finishOk = false;
     private Sprite sprite;      //flecha
     private boolean alive;
     private int velocity = 50;
@@ -121,7 +127,7 @@ public class BotonManager implements Runnable{
 
     private int getPoints(int p)
     {
-        return (p/10) + 1;
+        return ((p/10) + 1) * this.globalMultiplier;
     }
     //Funcion que es llamada cuando se produce un acierto
     private void doAcert()
@@ -170,10 +176,12 @@ public class BotonManager implements Runnable{
 
     public void run ()
     {
-        int actualColor;
+        int actualColor = 0;
+        
         while (this.alive)
-        {
+        {            
             this.finish = false;
+            this.finishOk = false;
             actualColor = 255;
             this.actualButton = 0;  //el primer boton no fue apretado todavia
             //seteamos los colores principales
@@ -198,8 +206,7 @@ public class BotonManager implements Runnable{
                 try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
                  ex.printStackTrace();
                 }                
-            }
-            
+            }            
             //******     TRANSFORMACION DE VERDE A ROJO **************
             actualColor = 255;
             while (actualColor > 0) {
@@ -215,8 +222,14 @@ public class BotonManager implements Runnable{
                  ex.printStackTrace();
                 }                
             }
+            /* chequeamos si hubo acierto para todos los elementos */
+
+            this.finishOk = true;
+            for (int i = 0; i < this.boton.length; i++)
+                this.finishOk &= !(this.boton[i].isActive());
             this.finish = true;
-            
+
+
              try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
                  ex.printStackTrace();
              }
@@ -227,6 +240,43 @@ public class BotonManager implements Runnable{
     public boolean isFinish ()
     {
         return this.finish;
+    }
+
+    /* vamos a tunear esta cochinada */
+    public void setIsFinish (boolean b)
+    {
+        this.finish = b;
+    }
+    public boolean isFinishOk()
+    {
+        return this.finishOk;
+    }
+
+    /* Funcion que aumenta hasta el proximo multiplicador */
+    public void setNextMultiplier ()
+    {
+        if (this.globalMultiplier < 4) {
+            this.globalMultiplier = this.globalMultiplier + 1;
+            /* debemos aumentar la velocidad ==> disminuir velocity */
+            this.velocity -= VELOCITY_MULTIPLIER_FACTOR;
+        }
+    }
+
+    public void setMultiplier (int n)
+    {
+        if (n >= 1 && n <= 4) {
+            /* falta el tema de la velocidad */
+            this.globalMultiplier = n;
+        }
+    }
+
+    public void setPrevMultiplier ()
+    {
+        if (this.globalMultiplier > 1) {
+            this.globalMultiplier = this.globalMultiplier - 1;
+            /* debemos disminuir la velocidad ==> aumentar velocity */
+            this.velocity += VELOCITY_MULTIPLIER_FACTOR;
+        }
     }
 
     public void paint (Graphics g)
