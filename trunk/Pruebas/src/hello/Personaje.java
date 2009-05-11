@@ -36,6 +36,7 @@ public class Personaje implements Runnable {
     private boolean alive = true;
     private Thread tpers;
     private int velocity = 70;
+    private int pointCounter = 0;
     private Random rand = new Random();
     private static final int ANIM_COUNT = 5;
     private static final int[] animNormal = {0,1,2,3,4,5,6,7,8};
