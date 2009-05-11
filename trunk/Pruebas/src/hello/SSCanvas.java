@@ -48,8 +48,7 @@ class SSCanvas extends Canvas implements Runnable{
            */
           // flecha.setPosition(0, 0);
            mona.set_velocity(100);
-           sp.startMusic();
-       
+           sp.startMusic();       
 	 }
 	 
 	 
