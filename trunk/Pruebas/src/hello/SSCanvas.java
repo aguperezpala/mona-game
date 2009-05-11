@@ -39,6 +39,7 @@ class SSCanvas extends Canvas implements Runnable{
            luces.setNumberOfObjects(3);
            bienAhi = new Cartel("bien_ahi.png", this.getWidth(),this.getHeight(),10);
            bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
+           bienAhi.setTimeToShow(2000);
            lmanager.append(bienAhi.getSprite());
            btnmng.setAlive(true);
           /* derecha.setColor(0x0fffffff);
