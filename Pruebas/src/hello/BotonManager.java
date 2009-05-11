@@ -46,6 +46,7 @@ public class BotonManager implements Runnable{
     
    
     private int points = 0;
+    private boolean finish = false;     /* flag que determina el final de cada secuencia */
     private Sprite sprite;      //flecha
     private boolean alive;
     private int velocity = 50;
@@ -172,6 +173,7 @@ public class BotonManager implements Runnable{
         int actualColor;
         while (this.alive)
         {
+            this.finish = false;
             actualColor = 255;
             this.actualButton = 0;  //el primer boton no fue apretado todavia
             //seteamos los colores principales
@@ -201,7 +203,7 @@ public class BotonManager implements Runnable{
             //******     TRANSFORMACION DE VERDE A ROJO **************
             actualColor = 255;
             while (actualColor > 0) {
-                actualColor = actualColor - this.COLOR_CHANGE_VELOCITY;
+                actualColor = actualColor - BotonManager.COLOR_CHANGE_VELOCITY;
 
                 for (int i = 0; i < 3; i++) {
                     if (boton[i].isActive()) {  //si esta activo cambiamos de color
@@ -213,6 +215,7 @@ public class BotonManager implements Runnable{
                  ex.printStackTrace();
                 }                
             }
+            this.finish = true;
             
              try {Thread.sleep(this.velocity);} catch (InterruptedException ex) {
                  ex.printStackTrace();
@@ -220,6 +223,12 @@ public class BotonManager implements Runnable{
         }
 
     }
+
+    public boolean isFinish ()
+    {
+        return this.finish;
+    }
+
     public void paint (Graphics g)
     {
         //si estan "vivos" los botones los dibujamos

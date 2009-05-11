@@ -17,7 +17,7 @@ class SSCanvas extends Canvas implements Runnable{
 	 public boolean activo=false;
          private Random random=new Random();
          private int puntaje;
-         private Personaje subZero = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
+         private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
          private LayerManager lmanager;
          private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
          private Cartel bienAhi;
@@ -30,12 +30,12 @@ class SSCanvas extends Canvas implements Runnable{
          public SSCanvas()
          {         
            //random.setSeed(System.currentTimeMillis());
-           subZero.set_pos(this.getWidth()/2, this.getHeight()/2);
-           //subZero.set_transformation(subZero.getSprite().TRANS_MIRROR);
+           mona.set_pos(this.getWidth()/2, this.getHeight()/2);
+           //mona.set_transformation(mona.getSprite().TRANS_MIRROR);
            lmanager = new LayerManager();
            lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
-           //lmanager.insert(subZero.getSprite(), 0);
-           lmanager.append(subZero.getSprite());
+           //lmanager.insert(mona.getSprite(), 0);
+           lmanager.append(mona.getSprite());
            luces.setNumberOfObjects(3);
            bienAhi = new Cartel("bien_ahi.png", this.getWidth(),this.getHeight(),10);
            bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
@@ -46,7 +46,7 @@ class SSCanvas extends Canvas implements Runnable{
            derecha.setPosition(150, 100);
            */
           // flecha.setPosition(0, 0);
-           subZero.set_velocity(100);
+           mona.set_velocity(100);
            sp.startMusic();
        
 	 }
@@ -82,7 +82,7 @@ class SSCanvas extends Canvas implements Runnable{
          
                         break;
 	            case LEFT:
-                        subZero.set_transformation(Sprite.TRANS_MIRROR);
+                        mona.set_transformation(Sprite.TRANS_MIRROR);
                         this.btnmng.pushButton(BotonManager.IZQUIERDA);         
 	            	break;
 
@@ -101,7 +101,7 @@ class SSCanvas extends Canvas implements Runnable{
             public void GamePause (boolean t)
             {
                 if (t) {
-                    subZero.set_alive(!t);
+                    mona.set_alive(!t);
                     this.btnmng.setAlive(!t);
                     this.sp.stop();
                     this.activo = !t;
