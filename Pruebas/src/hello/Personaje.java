@@ -230,6 +230,19 @@ public class Personaje implements Runnable {
         }
         this.sprite.setFrame(0);
     }
+
+
+    /* Esta funcion lo que hace es segun el nivel en el que esta ejecutar alguna
+     * animacion determinada. Vamos a ver si se completo la secuencia de los 3
+     * botones animados, si se completo entonces chequeamos el nivel en el que
+     * estamos y determinamos algun "random" para seleccionar entre 2 animaciones
+     * Tambien cada vez que se llega al final de la animacion volver a poner la
+     * animacion 0 (la default)...
+     */
+    private void selectAnimFromMultiplier ()
+    {
+
+    }
   
     /*****************   ADICONALES   ****************************************/
     /*
