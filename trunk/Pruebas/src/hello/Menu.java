@@ -21,6 +21,7 @@ class Menu extends Canvas implements Runnable {
     static final int SIZE_BETWEN_OPTIONS_Y = 15;
     static final int SIZE_OF_STRINGS = 10;      /*suponemos el tamaño de la fuente*/
     static final int SPACE_SELECTOR_STRINGS = 20;
+    static final int SELECTOR_PORC_SIZE = 5;   /* porcentaje en cuanto a la pantalla */
 
     private boolean alive = false;
     private String options[];   /*array donde almacenamos las opciones de menu*/
@@ -60,6 +61,10 @@ class Menu extends Canvas implements Runnable {
              /*Cargamos las imagenes*/
              try {
                  this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));
+                    //calculamos cantidad de cuadros en filas y columnas
+                    float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
+                            SELECTOR_PORC_SIZE);
+                    this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
              } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
              try {
                  this.backImg = Image.createImage(getClass().getResourceAsStream(backImg));
@@ -69,7 +74,7 @@ class Menu extends Canvas implements Runnable {
 
              /*comenzamos un nuevo thread*/
 
-             this.startXPos = (2 * this.getWidth() )/ 5;
+             this.startXPos = (this.getWidth() )/ 3;
              /*obtenemos el Y*/
              this.startYPos = (this.getHeight() - (this.options.length * SIZE_OF_STRINGS +
                      (this.options.length-1) * SIZE_BETWEN_OPTIONS_Y))/2;
@@ -83,7 +88,6 @@ class Menu extends Canvas implements Runnable {
 
 	 public void run() {
 	        //this.activo=false;
-
 
                   while (this.alive) {
                     repaint();
@@ -155,7 +159,7 @@ class Menu extends Canvas implements Runnable {
 
              /*(3)*/
              g.drawImage(this.selectorImg, this.selectorPosX, this.startYPos + (this.actualOps * (SIZE_OF_STRINGS+SIZE_BETWEN_OPTIONS_Y))
-                     , Graphics.VCENTER|Graphics.LEFT);
+                     + this.selectorImg.getHeight()/4, Graphics.VCENTER|Graphics.LEFT);
 
          }
 
