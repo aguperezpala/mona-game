@@ -22,7 +22,7 @@ class Menu extends Canvas implements Runnable {
     static final int SIZE_OF_STRINGS = 10;      /*suponemos el tamaño de la fuente*/
     static final int SPACE_SELECTOR_STRINGS = 20;
 
-    private boolean alive = false;    
+    private boolean alive = false;
     private String options[];   /*array donde almacenamos las opciones de menu*/
     private int startYPos;      /*desde donde van a ser dibujados los strings*/
     private int startXPos;      /*posicion en X de los strings*/
@@ -42,7 +42,7 @@ class Menu extends Canvas implements Runnable {
 	/*Constructor:
          * backImg & selectorImg no van a ser resizesadas
          * resp != NULL
-        */       
+        */
          public Menu(String[] ops, String backImg, String selectorImg, int backColor,
                  int menuColor, int[]resp)
          {
@@ -59,16 +59,16 @@ class Menu extends Canvas implements Runnable {
 
              /*Cargamos las imagenes*/
              try {
-                 this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));                 
+                 this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));
              } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
              try {
                  this.backImg = Image.createImage(getClass().getResourceAsStream(backImg));
                //  this.backImgX = this.getWidth()/2 - this.backImg.getWidth()/2;
                //  this.backImgY = this.getHeight()/2 - this.backImg.getHeight()/2;
              } catch (Exception e){System.out.print("Error cargando "+backImg+"\n");}
-       
+
              /*comenzamos un nuevo thread*/
-             
+
              this.startXPos = (2 * this.getWidth() )/ 5;
              /*obtenemos el Y*/
              this.startYPos = (this.getHeight() - (this.options.length * SIZE_OF_STRINGS +
@@ -76,16 +76,16 @@ class Menu extends Canvas implements Runnable {
              /*posicionamos el selector*/
              this.selectorPosX = this.startXPos - SPACE_SELECTOR_STRINGS -
                      this.selectorImg.getWidth()/2;
-             
-          
+
+
 	 }
-	 
-	 
+
+
 	 public void run() {
 	        //this.activo=false;
-            
-             
-                  while (this.alive) {                 
+
+
+                  while (this.alive) {
                     repaint();
                     serviceRepaints();
 
@@ -96,26 +96,26 @@ class Menu extends Canvas implements Runnable {
 	            }
 	        }
                 //this.activo=false;
-	     
-	    }  
+
+	    }
 
 
          public void keyPressed(int keyCode) {
-             
 
-             switch (keyCode) {         
+
+             switch (keyCode) {
                  case -1://UP
-                     this.decActualPos();                     
+                     this.decActualPos();
                      break;
-        
+
                  case -2://DOWN
-                     this.incActualPos();                     
+                     this.incActualPos();
                      break;
-                 
+
                  case 50://UP (KEY_NUM2)
-                     this.decActualPos();                     
-                     break;                     
-                 
+                     this.decActualPos();
+                     break;
+
                  case 56://DOWN (KEY_NUM8)
                      this.incActualPos();
                      break;
@@ -149,7 +149,7 @@ class Menu extends Canvas implements Runnable {
              /*seteamos el color de los strings*/
              g.setColor(this.menuColor);
              for (int i = 0; i < this.options.length; i++) {
-                 g.drawString(this.options[i], this.startXPos, this.startYPos + (i*(SIZE_OF_STRINGS+SIZE_BETWEN_OPTIONS_Y)), 
+                 g.drawString(this.options[i], this.startXPos, this.startYPos + (i*(SIZE_OF_STRINGS+SIZE_BETWEN_OPTIONS_Y)),
                          Graphics.TOP|Graphics.LEFT);
              }
 
@@ -163,7 +163,7 @@ class Menu extends Canvas implements Runnable {
          {
              this.alive = b;
          }
-         
+
          private void incActualPos ()
          {
              this.actualOps = (this.actualOps + 1) % this.options.length;
@@ -179,9 +179,9 @@ class Menu extends Canvas implements Runnable {
 
          private void finishMenu()
          {
-             /*seteamos la respuesta*/             
+             /*seteamos la respuesta*/
              this.response[0] = this.actualOps;
-             this.alive = false;    /*finalizamos el thread*/             
+             this.alive = false;    /*finalizamos el thread*/
          }
          private void destroyMenu()
          {
