@@ -22,8 +22,8 @@ public class BotonManager implements Runnable{
 
     /* CONFIGURACIONES */
     static final int BLUE_TIME = 8;
-    static final int MULT_POINTS_BLUE = 8;
-    static final int MULT_POINTS_GREEN = 4;
+    static final int MULT_POINTS_BLUE = 4;
+    static final int MULT_POINTS_GREEN = 3;
     static final int MULT_POINTS_REED = 2;
     
     //debe ser multiplo de 255, es la var que controla que tan rapido cambia de color
@@ -56,7 +56,7 @@ public class BotonManager implements Runnable{
     private int actualResults = 0;                  /* "determinador para avanzar resultcount */
     private final int VELOCITY_MULTIPLIER_FACTOR = 10;
     private int globalMultiplier = 1;   /* lo vamos a usar para el "X1" X2"...etc */
-    private int points = 0;
+    private int points = 0;    
     private boolean finish = false;     /* flag que determina el final de cada secuencia */
     private boolean finishOk = false;
     private Sprite sprite;      //flecha
@@ -133,7 +133,7 @@ public class BotonManager implements Runnable{
 
     private int getPoints(int p)
     {
-        return ((p/100) + 1) * this.globalMultiplier;
+        return ((p/100) + 1);
     }
     //Funcion que es llamada cuando se produce un acierto
     private void doAcert()
@@ -159,16 +159,16 @@ public class BotonManager implements Runnable{
         if (blue != 0) {
             //entonces estamos en el caso azul/verde
             if (blue >= green) {
-                this.points += this.getPoints(blue) * MULT_POINTS_BLUE;
+                this.points += (this.getPoints(blue) * MULT_POINTS_BLUE * this.globalMultiplier);
             } else {
-                this.points += this.getPoints(green) * MULT_POINTS_GREEN;
+                this.points += (this.getPoints(green) * MULT_POINTS_GREEN * this.globalMultiplier);
             }
         } else {
             //estamos en el caso verde/rojo
             if (green >= reed) {
-                this.points += this.getPoints(green) * MULT_POINTS_GREEN;
+                this.points += (this.getPoints(green) * MULT_POINTS_GREEN * this.globalMultiplier);
             } else {
-                this.points += this.getPoints(reed) * MULT_POINTS_REED;
+                this.points += (this.getPoints(reed) * MULT_POINTS_REED * this.globalMultiplier);
             }
         }
     }
