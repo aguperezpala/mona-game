@@ -22,8 +22,8 @@ public class BotonManager implements Runnable{
 
     /* CONFIGURACIONES */
     static final int BLUE_TIME = 8;
-    static final int MULT_POINTS_BLUE = 10;
-    static final int MULT_POINTS_GREEN = 5;
+    static final int MULT_POINTS_BLUE = 8;
+    static final int MULT_POINTS_GREEN = 4;
     static final int MULT_POINTS_REED = 2;
     
     //debe ser multiplo de 255, es la var que controla que tan rapido cambia de color
