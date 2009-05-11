@@ -48,6 +48,12 @@ public class BotonManager implements Runnable{
     /* Vamos a modificar la velocidad gradualmente segun una constante para cada
      * "multiplicador"
      */
+    /* Esta variable determina la cantidad de aciertos que tiene que haber para
+     * pasar al proximo "multiplicador"
+     */
+    private final int resultsCount[] = {2,3,4,5};
+    private int actualResultsCount = 0;             /* index del resultsCount */
+    private int actualResults = 0;                  /* "determinador para avanzar resultcount */
     private final int VELOCITY_MULTIPLIER_FACTOR = 10;
     private int globalMultiplier = 1;   /* lo vamos a usar para el "X1" X2"...etc */
     private int points = 0;
@@ -252,14 +258,26 @@ public class BotonManager implements Runnable{
         return this.finishOk;
     }
 
-    /* Funcion que aumenta hasta el proximo multiplicador */
-    public void setNextMultiplier ()
+    /* Funcion que aumenta hasta el proximo multiplicador devolviendo el actual */
+    public int setNextMultiplier ()
     {
-        if (this.globalMultiplier < 4) {
-            this.globalMultiplier = this.globalMultiplier + 1;
-            /* debemos aumentar la velocidad ==> disminuir velocity */
-            this.velocity -= VELOCITY_MULTIPLIER_FACTOR;
+        if (this.resultsCount[this.actualResultsCount] <= this.actualResults) {
+            /* debemos aumentar el actualresultcount y aumentar el multiplier */
+            /* aumentamos el multiplier */
+            if (this.globalMultiplier < 4) {
+                this.globalMultiplier = this.globalMultiplier + 1;
+                /* debemos aumentar la velocidad ==> disminuir velocity */
+                this.velocity -= VELOCITY_MULTIPLIER_FACTOR;
+                /* aumentamos el actualResultsCount */
+                this.actualResultsCount = ((this.actualResultsCount + 1) % this.resultsCount.length);
+                this.actualResults = 0;
+            }
+            
+        } else {
+            /* aumentamos el results */
+            this.actualResults++;
         }
+        return this.actualResultsCount;
     }
 
     public void setMultiplier (int n)
@@ -270,13 +288,17 @@ public class BotonManager implements Runnable{
         }
     }
 
-    public void setPrevMultiplier ()
+    public int setPrevMultiplier ()
     {
         if (this.globalMultiplier > 1) {
             this.globalMultiplier = this.globalMultiplier - 1;
             /* debemos disminuir la velocidad ==> aumentar velocity */
             this.velocity += VELOCITY_MULTIPLIER_FACTOR;
+            /* decrementamos el actual results count */
+            this.actualResultsCount = ((this.actualResultsCount - 1) % this.resultsCount.length);
+            this.actualResults = 0;
         }
+        return this.actualResultsCount;
     }
 
     public void paint (Graphics g)
@@ -288,6 +310,7 @@ public class BotonManager implements Runnable{
         }
         //graficamos momentaneamente los puntos
         g.drawString("PUNTOS: "+ this.points, 50, 23, 0);
+        g.drawString("MULTIPLIER: "+ this.globalMultiplier, 50, 0, 0);
 
     }
     
