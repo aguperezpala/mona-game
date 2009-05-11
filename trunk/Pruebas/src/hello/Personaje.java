@@ -24,6 +24,7 @@ package hello;
 
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.game.Sprite;
+import java.util.Random;
 /**
  *
  * @author agustin
@@ -35,6 +36,15 @@ public class Personaje implements Runnable {
     private boolean alive = true;
     private Thread tpers;
     private int velocity = 70;
+    private Random rand = new Random();
+    private static final int ANIM_COUNT = 5;
+    private static final int[] animNormal = {0,1,2,3,4,5,6,7,8};
+    private static final int[] animSalto = {9,10,11,12,13,14,15,13,12,13,14,15}; //9 a 15
+    private static final int[] animHae = {16,17,18,19};
+    private static final int[] animManosArriba = {20,21,22,23,22,21,20};
+    private static final int[] animCuello = {24,25,26,25,24};
+
+
 
     
     
@@ -68,6 +78,13 @@ public class Personaje implements Runnable {
                     //no hacemos ningun resize
                     this.sprite = new Sprite(image, width,height);
                 }
+                /* ahora vamos a setear las secuencias de las animaciones */
+                this.sprite.setFrameSequence(animNormal);
+                this.sprite.setFrameSequence(animSalto);
+                this.sprite.setFrameSequence(animHae);
+                this.sprite.setFrameSequence(animManosArriba);
+                this.sprite.setFrameSequence(animCuello);
+
         
             //seteamos el pixel de referencia justo en el medio de la imagen
             set_pixRef((int)(width *factor) / 2, (int)(height * factor) / 2);
@@ -146,9 +163,18 @@ public class Personaje implements Runnable {
         this.velocity = v;
     }
 
-    public void run () {       
+    public void run () {
+        int frame = 0;
         while (this.alive) {
-            this.sprite.nextFrame();            
+            if (this.sprite.getFrame() == this.sprite.getFrameSequenceLength() - 1) {
+                /* debemos actualizar y/o cambiar de secuencia */
+                frame = rand.nextInt(this.ANIM_COUNT);
+                this.setRandAnim(frame);
+            } else {
+                this.sprite.nextFrame();
+            }
+
+            
             
             try {
                 Thread.sleep(this.velocity);
@@ -156,6 +182,32 @@ public class Personaje implements Runnable {
                 ex.printStackTrace();
             }
         }
+    }
+
+
+    private void setRandAnim (int n)
+    {        
+        switch (n) {
+            case 0:
+                this.sprite.setFrameSequence(animNormal);
+                break;
+            case 1:
+                this.sprite.setFrameSequence(animSalto);
+                break;
+            case 2:
+                this.sprite.setFrameSequence(animHae);
+                break;
+            case 3:
+                this.sprite.setFrameSequence(animManosArriba);
+                break;
+            case 4:
+                this.sprite.setFrameSequence(animCuello);
+                break;
+            default:
+                this.sprite.setFrameSequence(animNormal); 
+
+        }
+        this.sprite.setFrame(0);
     }
   
     /*****************   ADICONALES   ****************************************/
