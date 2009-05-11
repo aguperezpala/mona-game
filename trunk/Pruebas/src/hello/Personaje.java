@@ -35,9 +35,15 @@ public class Personaje implements Runnable {
     private Sprite sprite;
     private boolean alive = true;
     private Thread tpers;
-    private int velocity = 70;
-    private int pointCounter = 0;
+    private int velocity = 70;    
     private Random rand = new Random();
+    private static final int NORMAL_ANIM = 0;
+    private static final int SALTO_ANIM = 1;
+    private static final int HAE_ANIM = 2;
+    private static final int MANOS_ARRIBA_ANIM = 3;
+    private static final int CUELLO_ANIM = 4;
+
+
     private static final int ANIM_COUNT = 5;
     private static final int[] animNormal = {0,1,2,3,4,5,6,7,8};
     private static final int[] animSalto = {9,10,11,12,13,14,15,13,12,13,14,15}; //9 a 15
@@ -163,6 +169,12 @@ public class Personaje implements Runnable {
     {
         this.velocity = v;
     }
+    
+    public void setAnim (int animType)
+    {
+        this.setRandAnim(animType);
+    }
+    
 
     public void run () {
         int frame = 0;
@@ -187,7 +199,15 @@ public class Personaje implements Runnable {
 
 
     private void setRandAnim (int n)
-    {        
+    {
+        /* ahora vamos a setear la animacion pero mirando para cualquiera
+         * de los posibles lados
+         */
+        if (this.rand.nextInt(2) == 1) {
+            this.sprite.setTransform(Sprite.TRANS_MIRROR);
+        } else {
+            this.sprite.setTransform(Sprite.TRANS_NONE);
+        }
         switch (n) {
             case 0:
                 this.sprite.setFrameSequence(animNormal);
