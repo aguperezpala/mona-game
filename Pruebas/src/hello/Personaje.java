@@ -43,7 +43,6 @@ public class Personaje implements Runnable {
     private static final int MANOS_ARRIBA_ANIM = 3;
     private static final int CUELLO_ANIM = 4;
 
-
     private static final int ANIM_COUNT = 5;
     private static final int[] animNormal = {0,1,2,3,4,5,6,7,8};
     private static final int[] animSalto = {9,10,11,12,13,14,15,13,12,13,14,15}; //9 a 15

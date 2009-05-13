@@ -68,6 +68,14 @@ public class BotonManager implements Runnable{
     Thread tbm;
     private int buttonsInactive = 0;
 
+
+    /* este entero lo vamos a usar como mapa de bits para almacenar que botones
+     * se apretaron durante una secuencia de la siguiente forma
+     * 0x00000XXX donde X puede ser 1 2 3 4 dependiendo que tecla se apreto
+     * (izquierda derecha arriba abajo respectivamente)
+     */
+    private int buttonsBits = 0;
+
     /* Constructor:
      * Requires:
      *          nomImg = nombre de la imagen de la flecha
@@ -171,14 +179,28 @@ public class BotonManager implements Runnable{
                 this.points += (this.getPoints(reed) * MULT_POINTS_REED * this.globalMultiplier);
             }
         }
+        if (this.buttonsInactive == 2) {
+            /* debemos reiniciar el mapa de bits */
+            this.buttonsBits = 0;
+        }
+
     }
-    
-    public void pushButton (int button)
+    /* Esta funcion devuelve el mapa de bits de las teclas apretadas hasta ahora.
+     * En caso de que todavia no se haya completado la secuencia se devuelve
+     * simplemente 0, caso contrario la secuencia
+     */
+    public int pushButton (int button)
     {
+        int result = 0;
         if (this.boton[this.actualButton].getOrientation() == this.orientations[button]) {
-                    //si apretamos el correcto entonces:
-                    this.doAcert();
-        }                
+            /* primero vamos a setear el mapa de bits */
+            this.buttonsBits = this.buttonsBits | ((button + 1) << (this.boton.length-this.actualButton * 4));
+            if (this.buttonsInactive == 2)
+                result = this.buttonsBits;
+            //si apretamos el correcto entonces:
+            this.doAcert();
+        }
+        return result;
     }
 
     public void run ()
