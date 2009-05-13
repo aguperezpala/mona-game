@@ -171,7 +171,10 @@ public class Personaje implements Runnable {
     
     public void setAnim (int animType)
     {
+        /*
         this.setRandAnim(animType);
+         */
+        this.selectAnimFromMultiplier(animType);
     }
     
 
@@ -238,7 +241,7 @@ public class Personaje implements Runnable {
      * Tambien cada vez que se llega al final de la animacion volver a poner la
      * animacion 0 (la default)...
      */
-    private void selectAnimFromMultiplier ()
+    private void selectAnimFromMultiplier (int animType)
     {
 
     }
