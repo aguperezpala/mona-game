@@ -103,6 +103,7 @@ class SSCanvas extends Canvas implements Runnable{
 
 	    public void keyPressed(int keyCode) {
 	        int action=getGameAction(keyCode);
+            int btnBits = 0;
 
 	        switch (action) {
                     case FIRE:                        
@@ -114,19 +115,24 @@ class SSCanvas extends Canvas implements Runnable{
                         break;
 	            case LEFT:
                         mona.set_transformation(Sprite.TRANS_MIRROR);
-                        this.btnmng.pushButton(BotonManager.IZQUIERDA);         
+                        btnBits = this.btnmng.pushButton(BotonManager.IZQUIERDA);
 	            	break;
 
                     case RIGHT:
-                        this.btnmng.pushButton(BotonManager.DERECHA);
+                        btnBits = this.btnmng.pushButton(BotonManager.DERECHA);
                         break;
                     case UP:
-                        this.btnmng.pushButton(BotonManager.ARRIBA);
+                        btnBits = this.btnmng.pushButton(BotonManager.ARRIBA);
                         break;
                     case DOWN:
-                        this.btnmng.pushButton(BotonManager.ABAJO);
+                        btnBits = this.btnmng.pushButton(BotonManager.ABAJO);
                         break;
 	        }
+            if (btnBits != 0) {
+                /* si se completo la secuencia enviamos el mapa de bits al personaje
+                 * para realizar determinada accion */
+                mona.setAnim(btnBits);
+            }
 	    }
             public void GamePause (boolean t)
             {
