@@ -10,25 +10,27 @@ import javax.microedition.lcdui.Font;
 
 class SSCanvas extends Canvas implements Runnable{
 
+
 	 //private Sprite miSprite=new Sprite(1);
 	 //private int pos_agu=80;
 	 //private int delta_x=0;
         
-	 public boolean activo=false;
-         private Random random=new Random();
-         private int puntaje;
-         private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
-         private LayerManager lmanager;
-         private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
-         private Cartel bienAhi;
-         //private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
-         //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
-         private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
-         private SoundPlayer sp = new SoundPlayer ("tema1.mid");
+	private boolean activo = true;
+    private Random random=new Random();
+    private int puntaje;
+    private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
+    private LayerManager lmanager;
+    private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
+    private Cartel bienAhi;
+    //private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
+    //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
+    private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+    private SoundPlayer sp = new SoundPlayer ("tema1.mid");
 
-       
+
          public SSCanvas()
-         {         
+         {
+             
            //random.setSeed(System.currentTimeMillis());
            mona.set_pos(this.getWidth()/2, this.getHeight()/2);
            //mona.set_transformation(mona.getSprite().TRANS_MIRROR);
@@ -57,7 +59,7 @@ class SSCanvas extends Canvas implements Runnable{
             int lastMultiplier = 0;
             int actualMultiplier = 0;
              
-                  while (true) {                 
+                  while (this.activo == true) {
                     repaint();
                     serviceRepaints();
                     if (btnmng.isFinish()) {
@@ -90,13 +92,13 @@ class SSCanvas extends Canvas implements Runnable{
 
                         btnmng.setIsFinish(false);
                     }
-
+                    
                     try {
 	                Thread.sleep(5);
 	            } catch (InterruptedException e) {
 	                System.out.println(e.toString());
 	            }
-	        }
+	        }            
                 //this.activo=false;
 	     
 	    }  
@@ -136,13 +138,16 @@ class SSCanvas extends Canvas implements Runnable{
 	    }
             public void GamePause (boolean t)
             {
-                if (t) {
-                    mona.set_alive(!t);
-                    this.btnmng.setAlive(!t);
+                this.activo = !t;
+                mona.set_alive(!t);
+                this.btnmng.setAlive(!t);
+                /* deberiamos reactivar la musica */
+                if (t)
                     this.sp.stop();
-                    this.activo = !t;
-                }
-
+               /* else
+                     ejecutamos la musiva correspondiente al nivel;
+                     */
+               
             }
 
 public void keyReleased (int keyCode) {
