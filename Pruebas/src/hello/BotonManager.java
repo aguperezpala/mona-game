@@ -129,11 +129,16 @@ public class BotonManager implements Runnable{
     public void setAlive (boolean b)
     {
           if (b == true) {
+              /* debemos chequear que el thread haya muerto */
             if (!this.alive) {
                 this.alive = true;
-                this.tbm=new Thread(this);
-                tbm.start();  //chequear esto
-            }             
+                /* si el thread no fue creado ni esta vivo */
+                if (this.tbm == null || !this.tbm.isAlive()) {
+                    this.tbm = null;
+                    this.tbm = new Thread(this);
+                    tbm.start();  //chequear esto
+                }
+            }
         } else {            
             this.alive = false;
         }
@@ -205,8 +210,7 @@ public class BotonManager implements Runnable{
 
     public void run ()
     {
-        int actualColor = 0;
-        
+        int actualColor = 0;        
         
         while (this.alive)
         {            
@@ -264,7 +268,7 @@ public class BotonManager implements Runnable{
              try {Thread.sleep(this.velocity+200);} catch (InterruptedException ex) {
                  ex.printStackTrace();
              }
-        }
+        }       
 
     }
 

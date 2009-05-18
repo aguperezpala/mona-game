@@ -57,8 +57,7 @@ class SSCanvas extends Canvas implements Runnable{
 	 public void run() {
 	        //this.activo=false;
             int lastMultiplier = 0;
-            int actualMultiplier = 0;
-             
+            int actualMultiplier = 0;             
                   while (this.activo == true) {
                     repaint();
                     serviceRepaints();
@@ -98,9 +97,7 @@ class SSCanvas extends Canvas implements Runnable{
 	            } catch (InterruptedException e) {
 	                System.out.println(e.toString());
 	            }
-	        }            
-                //this.activo=false;
-	     
+	        }
 	    }  
 
 	    public void keyPressed(int keyCode) {

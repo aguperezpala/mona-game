@@ -12,6 +12,7 @@ package hello;
 
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Form;
 
 
 /**
@@ -36,30 +37,27 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     private Command exitCommand;
     //</editor-fold>//GEN-END:|fields|0|
 
-    private Display display;
-    private Thread tmenu;
+    private Display display;    
     /* opciones que tiene el menu */
     private String opciones[] = {"Iniciar Juego","Opciones", "Elejir Nivel", "Creditos", "Salir"};
     /* respuesta que vamos a recibir desde el menu */
     private int[] response = {-1};
-    private Menu menu;
     private SSCanvas game;      /*canvas game*/
     private Thread tgame;
+    private boolean alive = true;
     
     /**
      * The HelloMIDlet constructor.
      */
     public StartMIDlet() {
          display = Display.getDisplay(this);
-         /* creamos el menu */
-         this.menu = new Menu(opciones,"bien_ahi.png", "flecha1.png",0,0xFFFFFFFF, response);
          /* Creamos el Juego */
          game = new SSCanvas();
          game.setCommandListener(this);
          /* agregamos el boton de salida del juego */
          exitCommand = new Command("Volver",Command.SCREEN,2);
          game.addCommand(exitCommand);
-
+         
 
          /* Mostrariamos nuestro logo de la empresa y presentacion, y despues
           * comenzamos con el juego */
@@ -76,7 +74,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     private void initialize() {//GEN-END:|0-initialize|0|0-preInitialize
         // write pre-initialize user code here
         /* ejecutamos para mostrar el menu */
-        this.menuInitialize();
+        //this.menuInitialize();
        
 //GEN-LINE:|0-initialize|1|0-postInitialize
         // write post-initialize user de here
@@ -89,7 +87,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
      */
     public void startMIDlet() {//GEN-END:|3-startMIDlet|0|3-preAction
         // write pre-action user code here
-        
+        this.game();
         /* aca mostramos el logo de nuestra empresa */
 
 //GEN-LINE:|3-startMIDlet|1|3-postAction
@@ -147,7 +145,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     private void menuInitialize ()
     {
          // write pre-initialize user code here
-        int op = startMenu();
+        int op = startMenu();     
 
         /*deberiamos tener en cuenta cuando borrar el menu*/
         if (op < 0)
@@ -162,19 +160,19 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     break;
 
                 case OP_OPTIONS:
-                    this.destroyApp(true);
+                    this.alive = false;
                     break;
 
                 case OP_CHOOSE_LEVEL:
-                    this.destroyApp(true);
+                    this.alive = false;
                     break;
 
                 case OP_CREDITS:
-                    this.destroyApp(true);
+                    this.alive = false;
                     break;
 
                 case OP_EXIT_APP:
-                    this.destroyApp(true);
+                    this.alive = false;
                     break;
             }
 
@@ -186,9 +184,11 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     
     public void commandAction(Command c, Displayable s) {
-    	 if (c == exitCommand) {
-             //menu.setAlive(false);            
-             this.pauseApp();
+    	 if (c == exitCommand) {             
+             //try {game.wait();} catch (Exception e) {}
+             game.GamePause(true);
+             //this.pauseApp();
+             
 	 }    
     }
     /**
@@ -230,13 +230,14 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         /* pausamos todo */
         game.GamePause(true);
         /* esperamos que se detenga el juego */
-        try {
+        /*try {
             this.tgame.join();
         } catch (Exception e){System.out.print("Error al esperar tgame \n");}
-        midletPaused = true;
+        
         System.out.print("TERMINO COMMAND = ExitCommand\n");
-        /* activamos de nuevo el menu */
-        this.menuInitialize();
+        /* activamos de nuevo el menu */        
+        //this.menuInitialize();
+        
         
     }
 
@@ -258,45 +259,51 @@ public class StartMIDlet extends MIDlet implements CommandListener {
      *         <  0 caso de error.
     */
     private int startMenu ()
-    {         
-        /* activamos el menu */
-        //menu.setAlive(true);
-        tmenu = new Thread(menu);
-        //menu.setAlive(true);
-        tmenu.start();
-        display.setCurrent(menu);
-        
-        try {
-            tmenu.join();
-        } catch (Exception e){System.out.print("Error al esperar tmenu \n");}
-        tmenu = null;
-       
+    {
+        Menu menu = new Menu(opciones,"bien_ahi.png", "flecha1.png",0,0xFFFFFFFF, response);
+        Thread tmenu;
 
+        
+        tmenu = new Thread(menu);
+        tmenu.start();
+        //menu.setAlive(true);        
+        Display.getDisplay(this).setCurrent(menu);
+        /* vamos a setear la respuesta en -1 */
+        this.response[0] = -1;
+        
+        /* ahora vamos a esperar que se elija una opcion */
+      
+        try { tmenu.join();} catch (Exception e) {
+            System.out.print("Error al esperar tmenu \n");
+        }
+                
         return this.response[0];
     }
-    private void startGame()
+
+
+    private void game ()
     {        
-        /*chequeamos si esta en pausa o no*/
-        if (this.midletPaused) {
-            /*debemos hacer un resume*/
-            System.out.print("Resumiendo juego\n");
-            if (game == null)
-                System.out.print("Error, intentando resumir game\n");
-            else {
-                /*lo mostramos en pantalla al game*/                
-                game.GamePause(false);
-                this.midletPaused = false;               
-                tgame = new Thread (game);
-                tgame.start();
-                display.setCurrent(game);
-            }
-        } else {
-            System.out.print("Estamos creando el juego\n");
-            tgame = new Thread (game);
-            tgame.start();
-            /*lo mostramos en pantalla al game*/
-            display.setCurrent(game);
+        while (this.alive)
+        {
+            try {tgame.join();} catch (Exception e){}
+            this.menuInitialize();
+            //this.startGame();
+            System.out.print("aaaa");
         }
+        this.destroyApp(true);
+    }
+
+    private void startGame()
+    {
+        /* recolectamos basura */
+        this.tgame = null;
+        System.gc();
+
+        game.GamePause(false);
+        System.out.print("Estamos creando el juego\n");
+        tgame = new Thread (game);
+        tgame.start();
+        display.setCurrent(game);        
     }
 
 }
