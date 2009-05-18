@@ -16,89 +16,92 @@ class SSCanvas extends Canvas implements Runnable{
 	 //private int delta_x=0;
         
 	private boolean activo = true;
+    private boolean gameFinish = false;
     private Random random=new Random();
     private int puntaje;
     private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
     private LayerManager lmanager;
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
-    private Cartel bienAhi;
-    //private Sprite flecha = Resizer.spriteResized("flecha.png", this.getWidth(), this.getHeight(), 10, false);
-    //private Boton derecha = new Boton(flecha, this.getHeight(),10,Sprite.TRANS_MIRROR);
+    private Cartel bienAhi;    
     private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
     private SoundPlayer sp = new SoundPlayer ("tema1.mid");
 
 
          public SSCanvas()
-         {
-             
-           //random.setSeed(System.currentTimeMillis());
-           mona.set_pos(this.getWidth()/2, this.getHeight()/2);
-           //mona.set_transformation(mona.getSprite().TRANS_MIRROR);
-           lmanager = new LayerManager();
-           lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
-           //lmanager.insert(mona.getSprite(), 0);
-           lmanager.append(mona.getSprite());
-           luces.setNumberOfObjects(3);
-           bienAhi = new Cartel("bien_ahi.png", this.getWidth(),this.getHeight(),10);
-           bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
-           bienAhi.setTimeToShow(2000);
-           lmanager.append(bienAhi.getSprite());
-           btnmng.setAlive(true);
-          /* derecha.setColor(0x0fffffff);
-           derecha.setAlive(true);
-           derecha.setPosition(150, 100);
-           */
-          // flecha.setPosition(0, 0);
-           mona.set_velocity(100);
-           sp.startMusic();       
-	 }
+         {             
+             mona.set_pos(this.getWidth()/2, this.getHeight()/2);             
+             lmanager = new LayerManager();
+             lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
+             //lmanager.insert(mona.getSprite(), 0);
+             lmanager.append(mona.getSprite());
+             luces.setNumberOfObjects(3);
+             bienAhi = new Cartel("bien_ahi.png", this.getWidth(), this.getHeight(),10);
+             bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
+             bienAhi.setTimeToShow(2000);
+             lmanager.append(bienAhi.getSprite());
+             btnmng.setAlive(true);
+             mona.set_velocity(100);
+             sp.startMusic();
+         }
 	 
 	 
-	 public void run() {
-	        //this.activo=false;
-            int lastMultiplier = 0;
-            int actualMultiplier = 0;             
-                  while (this.activo == true) {
-                    repaint();
-                    serviceRepaints();
-                    if (btnmng.isFinish()) {
-                        /* debemos hacer:
-                         * 1) sacar determinar el multiplicador y/o
-                         * sacar el multiplicador en caso de no haber terminado
-                         * correctamente la secuencia.
-                         * 2) Mostrar el cartel si una sola vez? o lo mostramos
-                         * durante todo el tiempo?
-                         */
+	 public void run () {
+         int lastMultiplier = 0;
+         int actualMultiplier = 0;
 
-                        /* (1) */
-                        if (btnmng.isFinishOk()) {
-                            /* si termino ok aumentamos el multiplyer */
-                            actualMultiplier = btnmng.setNextMultiplier();
-                            if (actualMultiplier > lastMultiplier) {
-                                /* mostramos un "bien ahi" pòrque aumento de nivel */
-                                 bienAhi.show();
-                                 /* deberiamos cambiar el "multiplicador" (imagen) */
-                                 lastMultiplier = actualMultiplier;
-                            }
-                        } else {
-                            /* tenemos 2 posibilidades, o resetearlo al multiplicador
-                             * 1 o bajarlo de a uno*/
-                            actualMultiplier = btnmng.setPrevMultiplier();
-                            lastMultiplier = actualMultiplier;
-                        }
+         while (this.activo == true) {
+             repaint();
+             serviceRepaints();
+
+             /* debemos chequear que el tiempo de la musica no se haya
+              * terminado, si se termina la musica se termina el "juego"
+              */
+             if (this.sp.getActualTime() < this.sp.getDuration() || !this.gameFinish) {
+                 /* todavia no se termino el juego */
 
 
+                 if (btnmng.isFinish()) {
+                     /* debemos hacer:
+                      * 1) sacar determinar el multiplicador y/o
+                      * sacar el multiplicador en caso de no haber terminado
+                      * correctamente la secuencia.
+                      * 2) Mostrar el cartel si una sola vez? o lo mostramos
+                      * durante todo el tiempo?
+                      */
 
-                        btnmng.setIsFinish(false);
-                    }
-                    
-                    try {
-	                Thread.sleep(5);
-	            } catch (InterruptedException e) {
-	                System.out.println(e.toString());
-	            }
-	        }
-	    }  
+                     /* (1) */
+                     if (btnmng.isFinishOk()) {
+                         /* si termino ok aumentamos el multiplyer */
+                         actualMultiplier = btnmng.setNextMultiplier();
+                         if (actualMultiplier > lastMultiplier) {
+                             /* mostramos un "bien ahi" pòrque aumento de nivel */
+                             bienAhi.show();
+                             /* deberiamos cambiar el "multiplicador" (imagen) */
+                             lastMultiplier = actualMultiplier;
+                         }
+                     } else {
+                         /* tenemos 2 posibilidades, o resetearlo al multiplicador
+                          * 1 o bajarlo de a uno*/
+                         actualMultiplier = btnmng.setPrevMultiplier();
+                         lastMultiplier = actualMultiplier;
+                     }
+                     btnmng.setIsFinish(false);
+                 }
+             } else {
+                 /* si se termino el juego */
+                 if (!this.gameFinish)
+                    this.gameFinish = true;
+                 else {
+
+                 }
+             }
+             try {
+                 Thread.sleep(5);
+             } catch (InterruptedException e) {
+                 System.out.println(e.toString());
+             }
+         }
+     }
 
 	    public void keyPressed(int keyCode) {
 	        int action=getGameAction(keyCode);
@@ -171,23 +174,29 @@ public void keyReleased (int keyCode) {
 
 public void paint (Graphics g)
 {
-
     g.setColor(0,0,0);
     g.fillRect(0,0,getWidth(),getHeight());
-    luces.paint(g);
-    lmanager.paint(g, 0, 0);
-    g.setColor(255, 0, 0);
-    //g.setFont(Font.getFont(Font.FONT_STATIC_TEXT, Font.STYLE_ITALIC, Font.SIZE_LARGE));
-   // g.drawString("BIEN AHI!!", 50, 10, 0);
-    //g.setFont(Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE));
-    //g.drawString("BIEN AHI!!", 50, 25, 0);
-    g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
- //   g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
-    //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
-    //derecha.paint(g);
-//    flecha.paint(g);
+    
+    if (this.gameFinish) {
+        /* si se termino el juego debemos pasar al proximo nivel, mostrando
+         * todo lo que corresponda al nivel
+         */
+    } else {        
+        luces.paint(g);
+        lmanager.paint(g, 0, 0);
+        g.setColor(255, 0, 0);
+        //g.setFont(Font.getFont(Font.FONT_STATIC_TEXT, Font.STYLE_ITALIC, Font.SIZE_LARGE));
+       // g.drawString("BIEN AHI!!", 50, 10, 0);
+        //g.setFont(Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE));
+        //g.drawString("BIEN AHI!!", 50, 25, 0);
+        g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
+     //   g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
+        //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
+        //derecha.paint(g);
+    //    flecha.paint(g);
 
-    this.btnmng.paint(g);
+        this.btnmng.paint(g);
+    }
 
 
 }

@@ -184,11 +184,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     
     public void commandAction(Command c, Displayable s) {
-    	 if (c == exitCommand) {             
-             //try {game.wait();} catch (Exception e) {}
-             game.GamePause(true);
-             //this.pauseApp();
-             
+    	 if (c == exitCommand) {
+             this.pauseApp();             
 	 }    
     }
     /**
@@ -225,20 +222,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     /**
      * Called when MIDlet is paused.
      */
-    public void pauseApp() {
-        /* Aca deberiamos pausar el juego y despues mostrar el menu... */
-        /* pausamos todo */
-        game.GamePause(true);
-        /* esperamos que se detenga el juego */
-        /*try {
-            this.tgame.join();
-        } catch (Exception e){System.out.print("Error al esperar tgame \n");}
-        
-        System.out.print("TERMINO COMMAND = ExitCommand\n");
-        /* activamos de nuevo el menu */        
-        //this.menuInitialize();
-        
-        
+    public void pauseApp() {       
+        game.GamePause(true);        
     }
 
     /**
@@ -286,9 +271,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         while (this.alive)
         {
             try {tgame.join();} catch (Exception e){}
-            this.menuInitialize();
-            //this.startGame();
-            System.out.print("aaaa");
+            this.menuInitialize();            
         }
         this.destroyApp(true);
     }
@@ -298,9 +281,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         /* recolectamos basura */
         this.tgame = null;
         System.gc();
-
-        game.GamePause(false);
-        System.out.print("Estamos creando el juego\n");
+        game.GamePause(false);        
         tgame = new Thread (game);
         tgame.start();
         display.setCurrent(game);        
