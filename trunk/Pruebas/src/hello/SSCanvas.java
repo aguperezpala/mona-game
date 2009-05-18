@@ -14,7 +14,13 @@ class SSCanvas extends Canvas implements Runnable{
 	 //private Sprite miSprite=new Sprite(1);
 	 //private int pos_agu=80;
 	 //private int delta_x=0;
-        
+    /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
+     * reproducir el sonido
+     */
+    private final int levelTime[] = {4000,184000,184000,184000};
+    private int actualTime;
+
+    private LevelSelector levelSel = new LevelSelector("mapa_chico2.png");
 	private boolean activo = true;
     private boolean gameFinish = false;
     private Random random=new Random();
@@ -28,7 +34,9 @@ class SSCanvas extends Canvas implements Runnable{
 
 
          public SSCanvas()
-         {             
+         {
+             /* iniciamos el tiempo del nivel actual */
+             this.actualTime = this.levelTime[0];
              mona.set_pos(this.getWidth()/2, this.getHeight()/2);             
              lmanager = new LayerManager();
              lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
@@ -48,6 +56,7 @@ class SSCanvas extends Canvas implements Runnable{
 	 public void run () {
          int lastMultiplier = 0;
          int actualMultiplier = 0;
+         int levelShowTime = LevelSelector.showLevelTime;         
 
          while (this.activo == true) {
              repaint();
@@ -56,7 +65,7 @@ class SSCanvas extends Canvas implements Runnable{
              /* debemos chequear que el tiempo de la musica no se haya
               * terminado, si se termina la musica se termina el "juego"
               */
-             if (this.sp.getActualTime() < this.sp.getDuration() || !this.gameFinish) {
+             if (actualTime >= 0) {
                  /* todavia no se termino el juego */
 
 
@@ -89,12 +98,27 @@ class SSCanvas extends Canvas implements Runnable{
                  }
              } else {
                  /* si se termino el juego */
-                 if (!this.gameFinish)
+                 if (!this.gameFinish){
                     this.gameFinish = true;
-                 else {
+                    levelShowTime = LevelSelector.showLevelTime;
+                    /* aca chequeamos en realidad si podemos pasar de nivel o no */
+                    this.levelSel.actualLevel++;
+                    
+                    this.levelSel.loadLevel(this.levelSel.actualLevel);
+                    System.out.print("TERMINO EL JUEGO! AHROA MOSTRAMOS EL MAPA\n");
+                 } else {
+                     levelShowTime = levelShowTime - 5; /* depende del sleep del ciclo */
+                     /* ahora deberiamos chequear que si termino de mostrarse volvemos
+                      * a cargar el nuevo nivel, musica, escenografia y esas cosas */
+                     if (levelShowTime <= 0) {
+                         this.gameFinish = false;
+                         /* debemos reiniciar el tiempo de del nivel */
+                         actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+                     }
 
                  }
              }
+             actualTime -= 5;   /* depende del sleep de abajo */
              try {
                  Thread.sleep(5);
              } catch (InterruptedException e) {
@@ -144,9 +168,9 @@ class SSCanvas extends Canvas implements Runnable{
                 /* deberiamos reactivar la musica */
                 if (t)
                     this.sp.stop();
-               /* else
-                     ejecutamos la musiva correspondiente al nivel;
-                     */
+                else
+                    this.sp.startMusic();
+                   
                
             }
 
@@ -181,6 +205,7 @@ public void paint (Graphics g)
         /* si se termino el juego debemos pasar al proximo nivel, mostrando
          * todo lo que corresponda al nivel
          */
+        this.levelSel.paint(g);
     } else {        
         luces.paint(g);
         lmanager.paint(g, 0, 0);
@@ -194,6 +219,7 @@ public void paint (Graphics g)
         //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
         //derecha.paint(g);
     //    flecha.paint(g);
+        g.drawString("time:"+this.actualTime, 0, 0, 0);
 
         this.btnmng.paint(g);
     }
