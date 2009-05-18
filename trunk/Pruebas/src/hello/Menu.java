@@ -91,26 +91,24 @@ class Menu extends Canvas implements Runnable {
 
 
 	 public void run() {
-	        //this.activo=false;
+	        //this.activo=false;         
 
                   while (this.alive) {
                     repaint();
                     serviceRepaints();
 
-                    try {
+                try {
 	                Thread.sleep(5);
 	            } catch (InterruptedException e) {
 	                System.out.println(e.toString());
 	            }
 	        }
-                //this.activo=false;
-
 	    }
 
 
-         public void keyPressed(int keyCode) {
-
-
+         public void keyPressed(int keyCode)
+         {
+             
              switch (keyCode) {
                  case -1://UP
                      this.decActualPos();
