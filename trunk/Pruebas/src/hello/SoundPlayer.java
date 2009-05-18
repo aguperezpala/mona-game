@@ -19,21 +19,42 @@ public class SoundPlayer {
     
     public SoundPlayer(String fname)
     {
-       	 try {
-             
-             
-             p=Manager.createPlayer(this.getClass().getResourceAsStream(fname), "audio/midi");
-	     //p = Manager.createPlayer("file://pattern.mid");
-	     p.realize();
-            vc=(VolumeControl) p.getControl("VolumeControl");
-            vc.setLevel(100); 
-	   
-	 } catch (Exception ioe) {System.out.print("ERROR********************************\n");
-         System.out.print(ioe.toString());
-         }
-	
-     }
-    
+        try {
+            p = Manager.createPlayer(this.getClass().getResourceAsStream(fname), "audio/midi");
+	        p.realize();
+            vc = (VolumeControl) p.getControl("VolumeControl");
+            vc.setLevel(100);
+        } catch (Exception ioe) {
+            System.out.print(ioe.toString());
+        }
+
+    }
+
+    public void setMusic (String fname)
+    {
+        /* si hay uno lo frenamos */
+        if (p != null) {
+            this.stop();
+            p.close();
+            p = null;
+            System.gc();
+        }
+        try {
+            p = Manager.createPlayer(this.getClass().getResourceAsStream(fname), "audio/midi");
+	        p.realize();            
+        } catch (Exception ioe) {
+            System.out.print(ioe.toString());
+        }
+    }
+    public long getDuration ()
+    {
+        return this.p.getDuration();
+    }
+    public long getActualTime ()
+    {
+        return this.p.getMediaTime();
+    }
+
     public void startMusic()
     {
         try {p.start();}catch(Exception e){};
