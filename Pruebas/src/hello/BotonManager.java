@@ -332,14 +332,15 @@ public class BotonManager implements Runnable{
 
     public void paint (Graphics g)
     {
+        //graficamos momentaneamente los puntos
+        g.drawString(""+this.points, 0, 0, 0);
+        g.drawString("X"+this.globalMultiplier, 0, 50, 0);
         //si estan "vivos" los botones los dibujamos
         for (int i = 0; i < 3; i++){
             if (boton[i].isAlive())
                 boton[i].paint(g);
         }
-        //graficamos momentaneamente los puntos
-        g.drawString("PUNTOS: "+ this.points, 50, 23, 0);
-        g.drawString("MULTIPLIER: "+ this.globalMultiplier, 50, 0, 0);
+        
 
     }
     

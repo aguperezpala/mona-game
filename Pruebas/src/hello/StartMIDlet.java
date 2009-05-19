@@ -179,8 +179,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     this.opciones = new String[4];
                     this.opciones[0] = "Nivel 1";
                     this.opciones[1] = "Nivel 2";
-                    this.opciones[2] = "Nivel 2";
-                    this.opciones[3] = "Nivel 2";
+                    this.opciones[2] = "Nivel 3";
+                    this.opciones[3] = "Nivel 4";
                     op = this.startMenu();
                     /* seteamos el nivel seleccionado */
                     game.setLevel(op);
@@ -300,6 +300,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
             try {tgame.join();} catch (Exception e){}
             this.menuInitialize();            
         }
+        this.game = null;
+        System.gc();
         this.destroyApp(true);
     }
 
