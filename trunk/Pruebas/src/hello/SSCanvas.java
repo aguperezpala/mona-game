@@ -255,7 +255,7 @@ public void paint (Graphics g)
         //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
         //derecha.paint(g);
     //    flecha.paint(g);
-        g.drawString("time:"+this.actualTime, 0, 0, 0);
+       // g.drawString("time:"+this.actualTime, 0, 0, 0);
 
         this.btnmng.paint(g);
     }
