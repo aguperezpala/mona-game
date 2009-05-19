@@ -67,14 +67,14 @@ public class BotonManager implements Runnable{
     private int actualButton = 0;
     Thread tbm;
     private int buttonsInactive = 0;
-
-
     /* este entero lo vamos a usar como mapa de bits para almacenar que botones
      * se apretaron durante una secuencia de la siguiente forma
      * 0x00000XXX donde X puede ser 1 2 3 4 dependiendo que tecla se apreto
      * (izquierda derecha arriba abajo respectivamente)
      */
     private int buttonsBits = 0;
+
+
 
     /* Constructor:
      * Requires:
@@ -199,7 +199,7 @@ public class BotonManager implements Runnable{
         int result = 0;
         if (this.boton[this.actualButton].getOrientation() == this.orientations[button]) {
             /* primero vamos a setear el mapa de bits */
-            this.buttonsBits = this.buttonsBits | ((button + 1) << (this.boton.length-this.actualButton * 4));
+            this.buttonsBits = this.buttonsBits | ((button + 1) << ((this.boton.length-this.actualButton) * 4));
             if (this.buttonsInactive == 2)
                 result = this.buttonsBits;
             //si apretamos el correcto entonces:

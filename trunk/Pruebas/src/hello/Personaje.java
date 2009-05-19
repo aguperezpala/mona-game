@@ -169,22 +169,11 @@ public class Personaje implements Runnable {
         this.velocity = v;
     }
     
-    public void setAnim (int animType)
-    {
-        /*
-        this.setRandAnim(animType);
-         */
-        this.selectAnimFromMultiplier(animType);
-    }
-    
-
-    public void run () {
-        int frame = 0;
+    public void run () {        
         while (this.alive) {
             if (this.sprite.getFrame() == this.sprite.getFrameSequenceLength() - 1) {
-                /* debemos actualizar y/o cambiar de secuencia */
-                frame = rand.nextInt(this.ANIM_COUNT);
-                this.setRandAnim(frame);
+                /* debemos actualizar y/o cambiar de secuencia */                
+                this.setRandAnim(0);
             } else {
                 this.sprite.nextFrame();
             }
@@ -210,7 +199,7 @@ public class Personaje implements Runnable {
         } else {
             this.sprite.setTransform(Sprite.TRANS_NONE);
         }
-        switch (n) {
+        switch (n % Personaje.ANIM_COUNT) {
             case 0:
                 this.sprite.setFrameSequence(animNormal);
                 break;
@@ -241,26 +230,31 @@ public class Personaje implements Runnable {
      * Tambien cada vez que se llega al final de la animacion volver a poner la
      * animacion 0 (la default)...
      */
-    private void selectAnimFromMultiplier (int animType)
+    public void selectAnimFromMultiplier (int animType)
     {
+        /* 0x00000XXX donde X puede ser 1 2 3 4 dependiendo que tecla se apreto */
+        /* vamos a analizar solamente el 2º boton, este va a determinar que
+         * animacion vamos a correr */
+        switch ((animType & 0x000000F0) >> 4) {
+            case 1:
+                animType = 1;
+                break;
+            case 2:
+                animType = 2;
+                break;
+            case 3:
+                animType = 3;
+                break;
+            case 4:
+                animType = 4;
+                break;
+            default:
+                animType = 0;
+        }
+        this.setRandAnim(animType);
 
-    }
-  
-    /*****************   ADICONALES   ****************************************/
-    /*
-    private int[] reescalaArray(int[] ini, int x, int y, int x2, int y2) {
-    int out[] = new int[x2*y2];
-    int dy, dx;
-    for (int yy = 0; yy < y2; yy++) {
-    dy = yy * y / y2;
-    for (int xx = 0; xx < x2; xx++) {
-    dx = xx * x / x2;
-    out[(x2*yy)+xx]=ini[(x*dy)+dx];
-    }
-    }
-        return out;  
-    }
-*/
-   
+
+    } 
+ 
     
 }

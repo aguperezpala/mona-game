@@ -17,7 +17,7 @@ class SSCanvas extends Canvas implements Runnable{
     /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
      * reproducir el sonido
      */
-    private final int levelTime[] = {4000,184000,184000,184000};
+    private final int levelTime[] = {184000,184000,184000,184000};
     private int actualTime;
 
     private LevelSelector levelSel = new LevelSelector("mapa_chico2.png");
@@ -157,7 +157,8 @@ class SSCanvas extends Canvas implements Runnable{
             if (btnBits != 0) {
                 /* si se completo la secuencia enviamos el mapa de bits al personaje
                  * para realizar determinada accion */
-                mona.setAnim(btnBits);
+                //System.out.print("1:"+((btnBits & 0x000000F0)>>4) +"\n");
+                mona.selectAnimFromMultiplier(btnBits);
             }
 	    }
             public void GamePause (boolean t)
