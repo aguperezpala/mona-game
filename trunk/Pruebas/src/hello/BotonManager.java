@@ -51,7 +51,7 @@ public class BotonManager implements Runnable{
     /* Esta variable determina la cantidad de aciertos que tiene que haber para
      * pasar al proximo "multiplicador"
      */
-    private final int resultsCount[] = {2,3,4,5};
+    public int resultsCount[] = {2,3,4,5};
     private int actualResultsCount = 0;             /* index del resultsCount */
     private int actualResults = 0;                  /* "determinador para avanzar resultcount */
     private final int VELOCITY_MULTIPLIER_FACTOR = 10;

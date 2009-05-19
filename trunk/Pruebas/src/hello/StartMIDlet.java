@@ -160,11 +160,30 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     break;
 
                 case OP_OPTIONS:
-                    this.alive = false;
+                    /* Configuramos la musica */
+                    this.opciones = null;
+                    System.gc();
+                    this.opciones = new String[2];
+                    this.opciones[0] = "Desactivar Sonido";
+                    this.opciones[1] = "Activar Sonido";
+                    op = this.startMenu();
+                    if (op == 0)
+                        game.setMusicOff();
+                    else
+                        game.setMusicOn();
                     break;
 
                 case OP_CHOOSE_LEVEL:
-                    this.alive = false;
+                    this.opciones = null;
+                    System.gc();
+                    this.opciones = new String[4];
+                    this.opciones[0] = "Nivel 1";
+                    this.opciones[1] = "Nivel 2";
+                    this.opciones[2] = "Nivel 2";
+                    this.opciones[3] = "Nivel 2";
+                    op = this.startMenu();
+                    /* seteamos el nivel seleccionado */
+                    game.setLevel(op);
                     break;
 
                 case OP_CREDITS:
@@ -177,6 +196,15 @@ public class StartMIDlet extends MIDlet implements CommandListener {
             }
 
         }
+        this.opciones = null;
+        System.gc();
+        this.opciones = new String[5];
+        this.opciones[0] = "Iniciar Juego";
+        this.opciones[1] = "Opciones";
+        this.opciones[2] = "Elejir Nivel";
+        this.opciones[3] = "Creditos";
+        this.opciones[4] = "Salir";
+
 
         // write post-initialize user code here
     }
@@ -234,8 +262,6 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         this.notifyDestroyed();
     }
 
-
-
     /**************************************************************************/
     /*Esta funcion ya debe tener pre-establecido las opciones (array de strings)
      *del menu. Queda esperando hasta que una opcion sea elejida
@@ -261,7 +287,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         try { tmenu.join();} catch (Exception e) {
             System.out.print("Error al esperar tmenu \n");
         }
-                
+        tmenu = null;
+        
         return this.response[0];
     }
 

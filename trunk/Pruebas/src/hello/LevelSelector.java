@@ -44,7 +44,7 @@ public class LevelSelector {
     {
         this.map = null;
         /* Debemos completar con todas las demas imagenes/sprites */
-
+        
         System.gc();
     }
 
