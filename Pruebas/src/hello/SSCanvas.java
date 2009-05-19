@@ -30,6 +30,7 @@ class SSCanvas extends Canvas implements Runnable{
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
     private Cartel bienAhi;    
     private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+    public boolean musicOn = true;
     private SoundPlayer sp = new SoundPlayer ("tema1.mid");
 
 
@@ -103,6 +104,7 @@ class SSCanvas extends Canvas implements Runnable{
                     levelShowTime = LevelSelector.showLevelTime;
                     /* aca chequeamos en realidad si podemos pasar de nivel o no */
                     this.levelSel.actualLevel++;
+                    this.setLevel(this.levelSel.actualLevel);
                     
                     this.levelSel.loadLevel(this.levelSel.actualLevel);
                     System.out.print("TERMINO EL JUEGO! AHROA MOSTRAMOS EL MAPA\n");
@@ -112,6 +114,7 @@ class SSCanvas extends Canvas implements Runnable{
                       * a cargar el nuevo nivel, musica, escenografia y esas cosas */
                      if (levelShowTime <= 0) {
                          this.gameFinish = false;
+                         this.levelSel.hide();
                          /* debemos reiniciar el tiempo de del nivel */
                          actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
                      }
@@ -161,41 +164,73 @@ class SSCanvas extends Canvas implements Runnable{
                 mona.selectAnimFromMultiplier(btnBits);
             }
 	    }
-            public void GamePause (boolean t)
+
+        public void setMusicOff ()
+        {
+            this.musicOn = false;
+            this.sp.setVolume(0);
+        }
+        public void setMusicOn ()
+        {
+            this.musicOn = true;
+            this.sp.setVolume(100);
+
+        }
+        public void setLevel (int level)
+        {
+            this.actualTime = this.levelTime[level % this.levelTime.length];
+            this.levelSel.actualLevel = level % this.levelTime.length;
+            /* aca seteamos la velocidad del nivel y los valores de la cantidad
+             * de aciertos para cada multiplicador
+             */
+            switch (level)
             {
-                this.activo = !t;
-                mona.set_alive(!t);
-                this.btnmng.setAlive(!t);
-                /* deberiamos reactivar la musica */
-                if (t)
-                    this.sp.stop();
-                else
-                    this.sp.startMusic();
-                   
-               
+                case 0:
+                    this.btnmng.setVelocity(50);
+                    for (int i = 0; i < this.btnmng.resultsCount.length; i++){
+                        this.btnmng.resultsCount[i] = i+1;
+                    }
+                    break;
+                case 1:
+                    this.btnmng.setVelocity(45);
+                    for (int i = 0; i < this.btnmng.resultsCount.length; i++){
+                        this.btnmng.resultsCount[i] = 2*i+1;
+                    }
+                    break;
+                case 2:
+                    this.btnmng.setVelocity(40);
+                    for (int i = 0; i < this.btnmng.resultsCount.length; i++){
+                        this.btnmng.resultsCount[i] = 2*i+2;
+                    }
+                    break;
+                case 3:
+                    this.btnmng.setVelocity(35);
+                    for (int i = 0; i < this.btnmng.resultsCount.length; i++){
+                        this.btnmng.resultsCount[i] = 3*i+1;
+                    }
+                    break;
+                default:
+                    this.btnmng.setVelocity(50);
+                    for (int i = 0; i < this.btnmng.resultsCount.length; i++){
+                        this.btnmng.resultsCount[i] = i+1;
+                    }
+                    break;
             }
+        }
 
-public void keyReleased (int keyCode) {
-   /* int action=getGameAction(keyCode);
 
-    switch (action) {
+        public void GamePause (boolean t)
+        {
+            this.activo = !t;
+            mona.set_alive(!t);
+            this.btnmng.setAlive(!t);
+            /* deberiamos reactivar la musica */
+            if (t)
+                this.sp.stop();
+            else
+                this.sp.startMusic();
+        }
 
-        case LEFT:
-            //miSprite.setX(miSprite.getX()+5);
-        	break;
-        case RIGHT:
-        	//miSprite.setX(miSprite.getX()-5);
-    //    	delta_x=0;
-            break;
-        case UP:
-      //  	miSprite.setY(miSprite.getY()+1);
-            break;
-        case DOWN:       
-        //	miSprite.setY(miSprite.getY()-5);
-            break;
-        
-    }*/
-}
 
 public void paint (Graphics g)
 {

@@ -24,7 +24,7 @@ class Menu extends Canvas implements Runnable {
     static final int SELECTOR_PORC_SIZE = 5;   /* porcentaje en cuanto a la pantalla */
 
     private boolean alive = false;
-    private String options[];   /*array donde almacenamos las opciones de menu*/
+    public String options[];   /*array donde almacenamos las opciones de menu*/
     private int startYPos;      /*desde donde van a ser dibujados los strings*/
     private int startXPos;      /*posicion en X de los strings*/
     private int selectorPosX;   /*posicion del icono selector*/
