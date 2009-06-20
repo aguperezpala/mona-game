@@ -17,7 +17,7 @@ class SSCanvas extends Canvas implements Runnable{
     /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
      * reproducir el sonido
      */
-    private final int levelTime[] = {184000,184000,184000,184000};
+    private final int levelTime[] = {1400,184000,184000,184000};
     private int actualTime;
 
     private LevelSelector levelSel = new LevelSelector("mapa_chico2.png");
@@ -104,23 +104,34 @@ class SSCanvas extends Canvas implements Runnable{
                     levelShowTime = LevelSelector.showLevelTime;
                     /* aca chequeamos en realidad si podemos pasar de nivel o no */
                     this.levelSel.actualLevel++;
-                    this.setLevel(this.levelSel.actualLevel);
-                    
+
+
                     this.levelSel.loadLevel(this.levelSel.actualLevel);
                     System.out.print("TERMINO EL JUEGO! AHROA MOSTRAMOS EL MAPA\n");
                  } else {
                      levelShowTime = levelShowTime - 5; /* depende del sleep del ciclo */
                      /* ahora deberiamos chequear que si termino de mostrarse volvemos
                       * a cargar el nuevo nivel, musica, escenografia y esas cosas */
+                     System.out.print("levelshowtime:"+levelShowTime+"\n");
                      if (levelShowTime <= 0) {
+                         System.out.print("COMIENZA EL JUEGO AHOAR\n");
                          this.gameFinish = false;
                          this.levelSel.hide();
                          /* debemos reiniciar el tiempo de del nivel */
                          actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+                         /* Aca esta el problema, deberiamos hacer lo siguiente:
+                     * 1) Esto deberia ir abajo del if (levelShowTime <= 0), ademas
+                     * deberiamos chequear si podemos aumentar de nivel o no, si
+                     * no podemos es porque se termino el juego! entonces deberiamos
+                     * mostrar algun "final".
+                     */
+                    this.setLevel(this.levelSel.actualLevel);
+
                      }
 
                  }
              }
+             
              actualTime -= 5;   /* depende del sleep de abajo */
              try {
                  Thread.sleep(5);

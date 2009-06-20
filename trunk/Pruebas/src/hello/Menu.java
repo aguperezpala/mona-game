@@ -63,7 +63,7 @@ class Menu extends Canvas implements Runnable {
                  this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));
                  /* ahora la rotamos */
                  try {
-                    this.selectorImg = Resizer.rotateImage(this.selectorImg, 180);
+                     this.selectorImg = Resizer.rotateImage(this.selectorImg, 180);
                  } catch (Exception e) {System.out.print("Menu: error rotate image\n");}
                     //calculamos cantidad de cuadros en filas y columnas
                     float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
