@@ -176,6 +176,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                 case OP_CHOOSE_LEVEL:
                     this.opciones = null;
                     System.gc();
+                    /* aca deberiamos determinar si es el comienzo del juego o no */
                     this.opciones = new String[4];
                     this.opciones[0] = "Nivel 1";
                     this.opciones[1] = "Nivel 2";
@@ -271,7 +272,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     */
     private int startMenu ()
     {
-        Menu menu = new Menu(opciones,"bien_ahi.png", "flecha1.png",0,0xFFFFFFFF, response);
+        Menu menu = new Menu(opciones,"logo_trans.png", "flecha1.png",0,0xFFFFFFFF, response);
         Thread tmenu;
 
         
