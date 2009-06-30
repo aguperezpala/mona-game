@@ -20,7 +20,7 @@ class SSCanvas extends Canvas implements Runnable{
     private final int levelTime[] = {1400,3400,3400,3400};
     private int actualTime;
 
-    private LevelSelector levelSel = new LevelSelector("mapa.png");
+    private LevelSelector levelSel = new LevelSelector("mapa.png", this.getWidth(), this.getHeight());
 	private boolean activo = true;
     private boolean gameFinish = false;
     private Random random = new Random();
