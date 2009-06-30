@@ -272,7 +272,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     */
     private int startMenu ()
     {
-        Menu menu = new Menu(opciones,"logo_trans.png", "flecha1.png",0,0xFFFFFFFF, response);
+        Menu menu = new Menu(opciones,"portada1.png", "flecha1.png",0,0xFFFFFFFF, response);
         Thread tmenu;
 
         

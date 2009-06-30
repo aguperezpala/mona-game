@@ -17,13 +17,13 @@ class SSCanvas extends Canvas implements Runnable{
     /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
      * reproducir el sonido
      */
-    private final int levelTime[] = {1400,184000,184000,184000};
+    private final int levelTime[] = {1400,3400,3400,3400};
     private int actualTime;
 
-    private LevelSelector levelSel = new LevelSelector("mapa_chico2.png");
+    private LevelSelector levelSel = new LevelSelector("mapa.png");
 	private boolean activo = true;
     private boolean gameFinish = false;
-    private Random random=new Random();
+    private Random random = new Random();
     private int puntaje;
     private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
     private LayerManager lmanager;
@@ -32,6 +32,7 @@ class SSCanvas extends Canvas implements Runnable{
     private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
     public boolean musicOn = true;
     private SoundPlayer sp = new SoundPlayer ("tema1.mid");
+    private boolean firstRun = true;
 
 
          public SSCanvas()
@@ -50,18 +51,42 @@ class SSCanvas extends Canvas implements Runnable{
              lmanager.append(bienAhi.getSprite());
              btnmng.setAlive(true);
              mona.set_velocity(100);
-             sp.startMusic();
+            // sp.startMusic();
          }
 	 
 	 
 	 public void run () {
          int lastMultiplier = 0;
          int actualMultiplier = 0;
-         int levelShowTime = LevelSelector.showLevelTime;         
+         int levelShowTime = LevelSelector.showLevelTime;
+
+         /* ahora vamos a chequear si es la primera corrida, si es asi entonces
+          * vamos a mostrar el mapa al compienzo y despues seguir normalmente */
+         if (this.firstRun) {
+             this.firstRun = false;
+             levelShowTime = LevelSelector.showLevelTime;             
+             this.levelSel.loadLevel(0, this.getHeight());
+             this.gameFinish = true;
+             while (levelShowTime >= 0) {
+                 repaint();
+                 serviceRepaints();
+                 levelShowTime -= 5;
+                 try {
+                     Thread.sleep(5);
+                 } catch (InterruptedException e) {
+                     System.out.println(e.toString());
+                }
+             }
+             this.gameFinish = false;
+             this.levelSel.hide();
+             levelShowTime = LevelSelector.showLevelTime;
+         }
+
 
          while (this.activo == true) {
              repaint();
              serviceRepaints();
+
 
              /* debemos chequear que el tiempo de la musica no se haya
               * terminado, si se termina la musica se termina el "juego"
@@ -100,33 +125,32 @@ class SSCanvas extends Canvas implements Runnable{
              } else {
                  /* si se termino el juego */
                  if (!this.gameFinish){
-                    this.gameFinish = true;
                     levelShowTime = LevelSelector.showLevelTime;
                     /* aca chequeamos en realidad si podemos pasar de nivel o no */
                     this.levelSel.actualLevel++;
-
-
-                    this.levelSel.loadLevel(this.levelSel.actualLevel);
-                    System.out.print("TERMINO EL JUEGO! AHROA MOSTRAMOS EL MAPA\n");
+                    if (this.levelSel.actualLevel >= 4) {
+                        /* TERMINO EL JUEGO */
+                    } else {
+                        this.levelSel.loadLevel(this.levelSel.actualLevel, this.getHeight());
+                        this.setMusicOff();
+                        this.gameFinish = true;
+                    }
                  } else {
                      levelShowTime = levelShowTime - 5; /* depende del sleep del ciclo */
                      /* ahora deberiamos chequear que si termino de mostrarse volvemos
-                      * a cargar el nuevo nivel, musica, escenografia y esas cosas */
-                     System.out.print("levelshowtime:"+levelShowTime+"\n");
-                     if (levelShowTime <= 0) {
-                         System.out.print("COMIENZA EL JUEGO AHOAR\n");
+                      * a cargar el nuevo nivel, musica, escenografia y esas cosas */                     
+                     if (levelShowTime <= 0) {                         
+                         this.setMusicOn();
                          this.gameFinish = false;
                          this.levelSel.hide();
                          /* debemos reiniciar el tiempo de del nivel */
                          actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
-                         /* Aca esta el problema, deberiamos hacer lo siguiente:
-                     * 1) Esto deberia ir abajo del if (levelShowTime <= 0), ademas
-                     * deberiamos chequear si podemos aumentar de nivel o no, si
-                     * no podemos es porque se termino el juego! entonces deberiamos
-                     * mostrar algun "final".
-                     */
-                    this.setLevel(this.levelSel.actualLevel);
-
+                        /* Aca esta el problema, deberiamos hacer lo siguiente:
+                         * deberiamos chequear si podemos aumentar de nivel o no, si
+                         * no podemos es porque se termino el juego! entonces deberiamos
+                         * mostrar algun "final".
+                         */
+                        this.setLevel(this.levelSel.actualLevel);
                      }
 
                  }
@@ -194,31 +218,40 @@ class SSCanvas extends Canvas implements Runnable{
             /* aca seteamos la velocidad del nivel y los valores de la cantidad
              * de aciertos para cada multiplicador
              */
-            switch (level)
+            switch (this.levelSel.actualLevel)
             {
                 case 0:
                     this.btnmng.setVelocity(50);
                     for (int i = 0; i < this.btnmng.resultsCount.length; i++){
                         this.btnmng.resultsCount[i] = i+1;
                     }
+                    /* seleccionamos la musica adecuada */
+                    this.sp.setMusic("tema1.mid");
+                    
                     break;
                 case 1:
                     this.btnmng.setVelocity(45);
                     for (int i = 0; i < this.btnmng.resultsCount.length; i++){
                         this.btnmng.resultsCount[i] = 2*i+1;
                     }
+                    /* seleccionamos la musica adecuada */
+                    this.sp.setMusic("beso_a_beso.mid");
                     break;
                 case 2:
                     this.btnmng.setVelocity(40);
                     for (int i = 0; i < this.btnmng.resultsCount.length; i++){
                         this.btnmng.resultsCount[i] = 2*i+2;
                     }
+                    /* seleccionamos la musica adecuada */
+                    this.sp.setMusic("el_enamorado.mid");
                     break;
                 case 3:
                     this.btnmng.setVelocity(35);
                     for (int i = 0; i < this.btnmng.resultsCount.length; i++){
                         this.btnmng.resultsCount[i] = 3*i+1;
                     }
+                    /* seleccionamos la musica adecuada */
+                    this.sp.setMusic("tomao_to_vino.mid");
                     break;
                 default:
                     this.btnmng.setVelocity(50);
@@ -227,6 +260,7 @@ class SSCanvas extends Canvas implements Runnable{
                     }
                     break;
             }
+            this.sp.startMusic();
         }
 
 
@@ -244,16 +278,17 @@ class SSCanvas extends Canvas implements Runnable{
 
 
 public void paint (Graphics g)
-{
-    g.setColor(0,0,0);
-    g.fillRect(0,0,getWidth(),getHeight());
-    
+{    
     if (this.gameFinish) {
         /* si se termino el juego debemos pasar al proximo nivel, mostrando
          * todo lo que corresponda al nivel
          */
+        g.setColor(0xd6e6d2);
+        g.fillRect(0,0,getWidth(),getHeight());
         this.levelSel.paint(g);
-    } else {        
+    } else {
+        g.setColor(0,0,0);
+        g.fillRect(0,0,getWidth(),getHeight());
         luces.paint(g);
         lmanager.paint(g, 0, 0);
         g.setColor(255, 0, 0);
