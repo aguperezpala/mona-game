@@ -68,10 +68,15 @@ class Menu extends Canvas implements Runnable {
                     //calculamos cantidad de cuadros en filas y columnas
                     float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
                             SELECTOR_PORC_SIZE);
-                    this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
+                   // this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
+                    System.gc();
              } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
              try {
                  this.backImg = Image.createImage(getClass().getResourceAsStream(backImg));
+                 float factor = Resizer.getFactor(this.getHeight(),this.backImg.getHeight(),
+                            100);
+                 this.backImg = Resizer.resizeImage(this.backImg, factor);
+                 System.gc();
                //  this.backImgX = this.getWidth()/2 - this.backImg.getWidth()/2;
                //  this.backImgY = this.getHeight()/2 - this.backImg.getHeight()/2;
              } catch (Exception e){System.out.print("Error cargando "+backImg+"\n");}
