@@ -7,6 +7,7 @@ package hello;
 
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.game.Sprite;
+import javax.microedition.lcdui.Font;
 /**
  *
  * @author agustin
@@ -27,11 +28,18 @@ public class LevelSelector {
     private int animSpeed = 0;
     private int caraX = 0, caraY = 0;
     private boolean initialized;
+    private int rectWidth = 0;
+    private int windowWidth = 0;
+    private int windowHeight = 0;
+    private Font font;
 
-    LevelSelector (String imgName)
+    LevelSelector (String imgName, int width, int height)
     {
         this.imgName = imgName;
         this.initialized = false;
+        this.windowWidth = width;
+        this.windowHeight = height;
+        font = Font.getFont(Font.FONT_STATIC_TEXT);
         
     }
 
@@ -74,6 +82,10 @@ public class LevelSelector {
                 this.galpon.getWidth()/2;
         caraY = this.levelMark[level][1] - this.galpon.getHeight()/2;
 
+        /* seteamos ahora el tamaño de el rectangulo abajo */
+        this.rectWidth = font.stringWidth(this.levelStr[level]);
+        this.rectWidth = (this.windowWidth - this.rectWidth)/2;
+
     }
 
     /* vamos a liberar todas las imagenes y llamar al garbage collector */
@@ -101,7 +113,22 @@ public class LevelSelector {
         /* ahora vamos a dibujar la cara de la mona en el lugar preciso */
         g.drawImage(this.caraMona, caraX, caraY, 0);
 
+        /* ahora dibujamos en la parte de abajo el nombre del lugar y el rectangulo */
+        /* primero el rectangulo */
+        g.setColor(0);      
+        g.fillRect(0, this.windowHeight - font.getBaselinePosition() - 5, this.windowWidth,
+                this.windowHeight);
+        
+        /* ahora las letras */
+        g.setFont(font);
+        g.setColor(255,255,255);
+        g.drawString(this.levelStr[this.actualLevel], this.rectWidth,
+                this.windowHeight - font.getBaselinePosition() - 3, Graphics.TOP|Graphics.LEFT);
+
     }
+
+
+
 
 
 
