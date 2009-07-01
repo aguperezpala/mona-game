@@ -21,7 +21,7 @@ class Menu extends Canvas implements Runnable {
     static final int SIZE_BETWEN_OPTIONS_Y = 15;
     static final int SIZE_OF_STRINGS = 10;      /*suponemos el tamaño de la fuente*/
     static final int SPACE_SELECTOR_STRINGS = 20;
-    static final int SELECTOR_PORC_SIZE = 5;   /* porcentaje en cuanto a la pantalla */
+    static final int SELECTOR_PORC_SIZE = 8;   /* porcentaje en cuanto a la pantalla */
 
     private boolean alive = false;
     public String options[];   /*array donde almacenamos las opciones de menu*/
@@ -72,8 +72,11 @@ class Menu extends Canvas implements Runnable {
                         //calculamos cantidad de cuadros en filas y columnas
                         float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
                                 SELECTOR_PORC_SIZE);
-                       // this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
+                        this.selectorImg = Resizer.resizeBitmap (this.selectorImg,
+                               (int) (this.selectorImg.getWidth()*factor),
+                               (int) (this.selectorImg.getHeight()*factor));
                         System.gc();
+
                  } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
              }
              try {
