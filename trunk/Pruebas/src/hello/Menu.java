@@ -36,6 +36,7 @@ class Menu extends Canvas implements Runnable {
     private int menuColor;      /*color de las letras*/
     private int actualOps = 0;  /*en que opcion esta el selector*/
     private int response[];     /*donde se va a guardar la respuesta*/
+    
 
 
 
@@ -59,26 +60,28 @@ class Menu extends Canvas implements Runnable {
 
 
              /*Cargamos las imagenes*/
-             try {
-                 this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));
-                 /* ahora la rotamos */
+             if (selectorImg == null)
+                 this.selectorImg = null;
+             else {
                  try {
-                     this.selectorImg = Resizer.rotateImage(this.selectorImg, 180);
-                 } catch (Exception e) {System.out.print("Menu: error rotate image\n");}
-                    //calculamos cantidad de cuadros en filas y columnas
-                    float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
-                            SELECTOR_PORC_SIZE);
-                   // this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
-                    System.gc();
-             } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
+                     this.selectorImg = Image.createImage(getClass().getResourceAsStream(selectorImg));
+                     /* ahora la rotamos */
+                     try {
+                         this.selectorImg = Resizer.rotateImage(this.selectorImg, 180);
+                     } catch (Exception e) {System.out.print("Menu: error rotate image\n");}
+                        //calculamos cantidad de cuadros en filas y columnas
+                        float factor = Resizer.getFactor(this.getHeight(),this.selectorImg.getHeight(),
+                                SELECTOR_PORC_SIZE);
+                       // this.selectorImg = Resizer.resizeImage(this.selectorImg, factor);
+                        System.gc();
+                 } catch (Exception e){System.out.print("Error cargando "+selectorImg+"\n");}
+             }
              try {
-                 this.backImg = Image.createImage(getClass().getResourceAsStream(backImg));
-                 float factor = Resizer.getFactor(this.getHeight(),this.backImg.getHeight(),
-                            100);
-                 this.backImg = Resizer.resizeImage(this.backImg, factor);
+                 this.backImg = Image.createImage(getClass().getResourceAsStream(backImg));                
+                 this.backImg = Resizer.resizeImage(this.backImg, this.getWidth(),
+                         this.getHeight());
                  System.gc();
-               //  this.backImgX = this.getWidth()/2 - this.backImg.getWidth()/2;
-               //  this.backImgY = this.getHeight()/2 - this.backImg.getHeight()/2;
+               
              } catch (Exception e){System.out.print("Error cargando "+backImg+"\n");}
 
              /*comenzamos un nuevo thread*/
@@ -88,8 +91,9 @@ class Menu extends Canvas implements Runnable {
              this.startYPos = (this.getHeight() - (this.options.length * SIZE_OF_STRINGS +
                      (this.options.length-1) * SIZE_BETWEN_OPTIONS_Y))/2;
              /*posicionamos el selector*/
-             this.selectorPosX = this.startXPos - SPACE_SELECTOR_STRINGS -
-                     this.selectorImg.getWidth()/2;
+             if (this.selectorImg != null)
+                this.selectorPosX = this.startXPos - SPACE_SELECTOR_STRINGS -
+                         this.selectorImg.getWidth()/2;
 
 
 	 }
@@ -165,8 +169,9 @@ class Menu extends Canvas implements Runnable {
              }
 
              /*(3)*/
-             g.drawImage(this.selectorImg, this.selectorPosX, this.startYPos + (this.actualOps * (SIZE_OF_STRINGS+SIZE_BETWEN_OPTIONS_Y))
-                     + this.selectorImg.getHeight()/4, Graphics.VCENTER|Graphics.LEFT);
+             if (this.selectorImg != null)
+                g.drawImage(this.selectorImg, this.selectorPosX, this.startYPos + (this.actualOps * (SIZE_OF_STRINGS+SIZE_BETWEN_OPTIONS_Y))
+                         + this.selectorImg.getHeight()/4, Graphics.VCENTER|Graphics.LEFT);
 
          }
 

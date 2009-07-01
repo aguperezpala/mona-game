@@ -7,6 +7,7 @@ import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.lcdui.game.LayerManager;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Image;
 
 class SSCanvas extends Canvas implements Runnable{
 
@@ -17,14 +18,13 @@ class SSCanvas extends Canvas implements Runnable{
     /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
      * reproducir el sonido
      */
-    private final int levelTime[] = {1400,3400,3400,3400};
+    private final int levelTime[] = {5400,3400,3400,3400};
     private int actualTime;
 
     private LevelSelector levelSel = new LevelSelector("mapa.png", this.getWidth(), this.getHeight());
 	private boolean activo = true;
     private boolean gameFinish = false;
-    private Random random = new Random();
-    private int puntaje;
+    private Random random = new Random();    
     private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
     private LayerManager lmanager;
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
@@ -32,13 +32,22 @@ class SSCanvas extends Canvas implements Runnable{
     private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
     public boolean musicOn = true;
     private SoundPlayer sp = new SoundPlayer ("tema1.mid");
-    private boolean firstRun = true;
+    public boolean firstRun = true;
+    public boolean terminateGame = false;
+    private Image finalImage = null;
+    private int finalStrCoord[] = {0,0};
+    private String finalStr = null;
+    private BarraTiempo spaceTime = null;
 
 
          public SSCanvas()
          {
              /* iniciamos el tiempo del nivel actual */
              this.actualTime = this.levelTime[0];
+             /* vamos a cargar la barra de tiempo en las posiciones (0,1/9) hasta
+              * (1/7,windowHeight) */
+             this.spaceTime = new BarraTiempo(1,this.getHeight()/9, this.getWidth()/7,
+                     this.getHeight());
              mona.set_pos(this.getWidth()/2, this.getHeight()/2);             
              lmanager = new LayerManager();
              lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
@@ -51,6 +60,7 @@ class SSCanvas extends Canvas implements Runnable{
              lmanager.append(bienAhi.getSprite());
              btnmng.setAlive(true);
              mona.set_velocity(100);
+             this.setLevel(0);
             // sp.startMusic();
          }
 	 
@@ -59,13 +69,14 @@ class SSCanvas extends Canvas implements Runnable{
          int lastMultiplier = 0;
          int actualMultiplier = 0;
          int levelShowTime = LevelSelector.showLevelTime;
+         
 
          /* ahora vamos a chequear si es la primera corrida, si es asi entonces
           * vamos a mostrar el mapa al compienzo y despues seguir normalmente */
          if (this.firstRun) {
              this.firstRun = false;
              levelShowTime = LevelSelector.showLevelTime;             
-             this.levelSel.loadLevel(0, this.getHeight());
+             this.levelSel.loadLevel(this.levelSel.actualLevel, this.getHeight());
              this.gameFinish = true;
              while (levelShowTime >= 0) {
                  repaint();
@@ -93,6 +104,9 @@ class SSCanvas extends Canvas implements Runnable{
               */
              if (actualTime >= 0) {
                  /* todavia no se termino el juego */
+
+                 /* actualizamos la spaceTime */
+                 this.spaceTime.actualTime = actualTime;
 
 
                  if (btnmng.isFinish()) {
@@ -130,6 +144,24 @@ class SSCanvas extends Canvas implements Runnable{
                     this.levelSel.actualLevel++;
                     if (this.levelSel.actualLevel >= 4) {
                         /* TERMINO EL JUEGO */
+                        /* reseteamos todos los valores variables etc nivel */                      
+                         try {
+                             this.finalImage = Image.createImage(getClass().getResourceAsStream("portada2.png"));
+                             float factor = Resizer.getFactor(this.getHeight(),this.finalImage.getHeight(), 100);                             
+                             this.finalStrCoord[1] = (int) (43 * factor);
+                             this.finalImage = Resizer.resizeImage(this.finalImage, this.getWidth(),
+                                     this.getHeight());
+                             System.gc();
+                         } catch (Exception e){System.out.print("Error cargando finalImage\n");}
+                         this.finalStr = "Puntaje: " + this.btnmng.points;
+                         this.finalStrCoord[0] = Font.getFont(Font.FACE_SYSTEM,
+                                 Font.STYLE_BOLD,Font.SIZE_LARGE).stringWidth(finalStr);
+                         this.finalStrCoord[0] = (this.getWidth() - this.finalStrCoord[0]) / 2;
+                         terminateGame = true;
+                         this.setMusicOff();
+                         this.gameFinish = true;
+                         this.setLevel(0);
+                         this.firstRun = true;
                     } else {
                         this.levelSel.loadLevel(this.levelSel.actualLevel, this.getHeight());
                         this.setMusicOff();
@@ -139,18 +171,23 @@ class SSCanvas extends Canvas implements Runnable{
                      levelShowTime = levelShowTime - 5; /* depende del sleep del ciclo */
                      /* ahora deberiamos chequear que si termino de mostrarse volvemos
                       * a cargar el nuevo nivel, musica, escenografia y esas cosas */                     
-                     if (levelShowTime <= 0) {                         
-                         this.setMusicOn();
-                         this.gameFinish = false;
-                         this.levelSel.hide();
-                         /* debemos reiniciar el tiempo de del nivel */
-                         actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
-                        /* Aca esta el problema, deberiamos hacer lo siguiente:
-                         * deberiamos chequear si podemos aumentar de nivel o no, si
-                         * no podemos es porque se termino el juego! entonces deberiamos
-                         * mostrar algun "final".
-                         */
-                        this.setLevel(this.levelSel.actualLevel);
+                     if (levelShowTime <= 0) {
+                         if (this.terminateGame) {
+                             this.activo = false;
+
+                         } else {
+                             this.setMusicOn();
+                             this.gameFinish = false;
+                             this.levelSel.hide();
+                             /* debemos reiniciar el tiempo de del nivel */
+                             actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+                            /* Aca esta el problema, deberiamos hacer lo siguiente:
+                             * deberiamos chequear si podemos aumentar de nivel o no, si
+                             * no podemos es porque se termino el juego! entonces deberiamos
+                             * mostrar algun "final".
+                             */
+                            this.setLevel(this.levelSel.actualLevel);
+                         }
                      }
 
                  }
@@ -163,6 +200,15 @@ class SSCanvas extends Canvas implements Runnable{
                  System.out.println(e.toString());
              }
          }
+         if (this.terminateGame != false) {
+             this.btnmng.points = 0;
+             this.terminateGame = false;
+             this.finalStr = null;
+             this.finalImage = null;
+             /* recargamos el tiempo del la primera cancion */
+             actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+         }
+         System.gc();
      }
 
 	    public void keyPressed(int keyCode) {
@@ -260,7 +306,10 @@ class SSCanvas extends Canvas implements Runnable{
                     }
                     break;
             }
+            this.spaceTime.totalTime = this.levelTime[this.levelSel.actualLevel]+7;
             this.sp.startMusic();
+            /* reseteamos el multiplicador */
+            this.btnmng.setMultiplier(1);
         }
 
 
@@ -283,27 +332,31 @@ public void paint (Graphics g)
         /* si se termino el juego debemos pasar al proximo nivel, mostrando
          * todo lo que corresponda al nivel
          */
-        g.setColor(0xd6e6d2);
-        g.fillRect(0,0,getWidth(),getHeight());
-        this.levelSel.paint(g);
+        if (this.terminateGame) {
+            /* dibujamos la tapa */
+            g.setColor(0);
+            if (finalImage != null)
+                g.drawImage (finalImage, 0, 0, Graphics.LEFT|Graphics.TOP);
+            if (this.finalStr != null){
+                g.setFont( Font.getFont(Font.FACE_SYSTEM,
+                                 Font.STYLE_BOLD,Font.SIZE_LARGE));
+                g.drawString(finalStr, this.finalStrCoord[0], this.finalStrCoord[1],
+                        Graphics.TOP|Graphics.LEFT);
+            }
+        } else {
+            g.setColor(0xd6e6d2);
+            g.fillRect(0,0,getWidth(),getHeight());
+            this.levelSel.paint(g);
+        }
     } else {
         g.setColor(0,0,0);
         g.fillRect(0,0,getWidth(),getHeight());
         luces.paint(g);
         lmanager.paint(g, 0, 0);
-        g.setColor(255, 0, 0);
-        //g.setFont(Font.getFont(Font.FONT_STATIC_TEXT, Font.STYLE_ITALIC, Font.SIZE_LARGE));
-       // g.drawString("BIEN AHI!!", 50, 10, 0);
-        //g.setFont(Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_LARGE));
-        //g.drawString("BIEN AHI!!", 50, 25, 0);
+        g.setColor(255, 0, 0);    
         g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
-     //   g.drawString("Memory: "+ Runtime.getRuntime().freeMemory(), 50, 40, 0);
-        //g.drawString("Free memory: "+ Runtime.getRuntime().freeMemory(), 50, 10, 0);
-        //derecha.paint(g);
-    //    flecha.paint(g);
-       // g.drawString("time:"+this.actualTime, 0, 0, 0);
-
         this.btnmng.paint(g);
+        this.spaceTime.paint(g);
     }
 
 
