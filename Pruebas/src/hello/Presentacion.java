@@ -18,7 +18,7 @@ public class Presentacion extends Canvas implements Runnable {
     private Image backImg = null;
     private int imgPos[] = {0,0};
     private int strPos[] = {0,0};
-    private int showTime = 10000;    /* milisec */
+    private int showTime = 7000;    /* milisec */
     private String str = "PRESENTA";
 
     public Presentacion (String back)

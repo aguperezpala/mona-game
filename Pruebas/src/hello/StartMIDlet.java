@@ -48,6 +48,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     private boolean alive = true;
     private String menuSelectorImg = "flecha1.png";
     private String menuBackImg = "portada1.png";
+    private boolean isHelp = false;
     
     /**
      * The HelloMIDlet constructor.
@@ -158,14 +159,18 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     //</editor-fold>//GEN-END:|18-getter|2|
 
     private void menuInitialize ()
-    {
+    {     
+
          this.menuBackImg = null;
          this.menuSelectorImg = null;
          System.gc();
          menuSelectorImg = "flecha1.png";
          menuBackImg = "portada1.png";
+
+         int op = startMenu();
+         
          // write pre-initialize user code here
-        int op = startMenu();     
+        
 
         /*deberiamos tener en cuenta cuando borrar el menu*/
         if (op < 0)
@@ -213,14 +218,24 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     this.menuBackImg = null;
                     this.menuSelectorImg = null;
                     this.opciones = null;
+                    this.isHelp = true;
                     System.gc();
                     Form form = new Form("Creditos");
-                    
-                    form.append("Esto es una demostracion de nuestros creditos!"+
-                            " Nosotros somos alguien que quiere vender juegos loco"+
-                            "\nasique dejate de joder las bolas");
+                    form.addCommand(exitCommand);
+                    form.setCommandListener(this);
+                    form.append("El juego consiste en apretar lo antes posible " +
+                            "las combinaciones de flechas. Para lograr esto se pueden " +
+                            "utilizar tanto el joystick del celular como asi las teclas " +
+                            "4 (izquierda), 6 (derecha), 2 (arriba), 8 (abajo)") ;
                   
                     this.display.setCurrent(form);
+                    /* ahora esperamos de forma cacasa que hayan salido de la ayuda
+                     * por dios, que hdp! KA KA SO */
+                    while (this.isHelp){
+                        try {
+                            Thread.sleep(80);
+                        } catch (InterruptedException e) {System.out.println(e.toString());}
+                    }
 
                     break;
 
@@ -247,7 +262,10 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     
     public void commandAction(Command c, Displayable s) {
     	 if (c == exitCommand) {
-             this.pauseApp();             
+             if (this.isHelp)
+                 this.isHelp = false;
+             else
+                this.pauseApp();             
 	 }    
     }
     /**
