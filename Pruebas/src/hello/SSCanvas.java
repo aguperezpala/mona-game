@@ -38,12 +38,14 @@ class SSCanvas extends Canvas implements Runnable{
     private int finalStrCoord[] = {0,0};
     private String finalStr = null;
     private BarraTiempo spaceTime = null;
+    private int textCoords[] = {this.getWidth()/3, 2 * this.getWidth()/3, 0};
 
 
          public SSCanvas()
          {
-             /* iniciamos el tiempo del nivel actual */
-             this.actualTime = this.levelTime[0];
+             /* calculamos el tamaño Y de el puntaje y el multiplicador */
+             this.textCoords[2] = Font.getFont(Font.FACE_SYSTEM,
+                                 Font.STYLE_BOLD,Font.SIZE_LARGE).getBaselinePosition()+2;
              /* vamos a cargar la barra de tiempo en las posiciones (0,1/9) hasta
               * (1/7,windowHeight) */
              this.spaceTime = new BarraTiempo(1,this.getHeight()/9, this.getWidth()/7,
@@ -55,13 +57,15 @@ class SSCanvas extends Canvas implements Runnable{
              lmanager.append(mona.getSprite());
              luces.setNumberOfObjects(3);
              bienAhi = new Cartel("bien_ahi.png", this.getWidth(), this.getHeight(),10);
-             bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2);
+             bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2 +
+                     this.textCoords[2]);
              bienAhi.setTimeToShow(2000);
              lmanager.append(bienAhi.getSprite());
              btnmng.setAlive(true);
              mona.set_velocity(100);
              this.setLevel(0);
-            // sp.startMusic();
+            // sp.startMusic();          
+             
          }
 	 
 	 
@@ -349,6 +353,7 @@ public void paint (Graphics g)
             this.levelSel.paint(g);
         }
     } else {
+        int aux;
         g.setColor(0,0,0);
         g.fillRect(0,0,getWidth(),getHeight());
         luces.paint(g);
@@ -357,6 +362,18 @@ public void paint (Graphics g)
         g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
         this.btnmng.paint(g);
         this.spaceTime.paint(g);
+
+         //graficamos momentaneamente los puntos
+        /*g.setColor(0x00FFFFFF);
+        g.fillRect(0, 0, this.textCoords[0], this.textCoords[2]);
+        g.fillRect(this.textCoords[1], 0, this.textCoords[0], this.textCoords[2]);
+        g.setColor(0);*/
+        g.setColor(0x00FFFFFF);
+        aux = (this.textCoords[0] - g.getFont().stringWidth(""+this.btnmng.points))/2;
+        g.drawString(""+this.btnmng.points, aux, 1,
+                Graphics.TOP|Graphics.LEFT);
+        g.drawString("X"+this.btnmng.globalMultiplier, this.textCoords[1] +
+                this.textCoords[0]/2, 1, Graphics.TOP|Graphics.LEFT);
     }
 
 
