@@ -21,7 +21,7 @@ public class LevelSelector {
     /* los nombres que vamos a mostrar de los lugares */
     private final String levelStr[] = {"Lugar 1", "lugar 2", "lugar 3", "lugar 4"};
     /* almacenamos las coordenadas de las pociciones de los lugares */
-    private int levelMark[][] = {{83,98},{107,94},{115,60},{110,125}};
+    private int levelMark[][] = {{77,97},{122,47},{115,95},{118,141}};
     /* kakaso, ya murio el hecho de "hacer bien las cosas" */
     private Sprite galpon = null;
     private Image caraMona = null;

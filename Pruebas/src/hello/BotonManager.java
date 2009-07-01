@@ -55,8 +55,8 @@ public class BotonManager implements Runnable{
     private int actualResultsCount = 0;             /* index del resultsCount */
     private int actualResults = 0;                  /* "determinador para avanzar resultcount */
     private final int VELOCITY_MULTIPLIER_FACTOR = 10;
-    private int globalMultiplier = 1;   /* lo vamos a usar para el "X1" X2"...etc */
-    private int points = 0;    
+    public int globalMultiplier = 1;   /* lo vamos a usar para el "X1" X2"...etc */
+    public int points = 0;
     private boolean finish = false;     /* flag que determina el final de cada secuencia */
     private boolean finishOk = false;
     private Sprite sprite;      //flecha

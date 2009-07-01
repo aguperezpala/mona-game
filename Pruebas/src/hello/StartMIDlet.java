@@ -13,6 +13,7 @@ package hello;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Image;
 
 
 /**
@@ -28,7 +29,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     static final int OP_START_GAME = 0;     /*RESUME o START*/
     static final int OP_OPTIONS = 1;
     static final int OP_CHOOSE_LEVEL = 2;
-    static final int OP_CREDITS = 3;        /*:D*/
+    static final int OP_HELP = 3;        /*:D*/
     static final int OP_EXIT_APP = 4;
     
     private boolean midletPaused = false;
@@ -39,12 +40,14 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     private Display display;    
     /* opciones que tiene el menu */
-    private String opciones[] = {"Iniciar Juego","Opciones", "Elejir Nivel", "Creditos", "Salir"};
+    private String opciones[] = {"Iniciar Juego","Opciones", "Elejir Nivel", "Ayuda", "Salir"};
     /* respuesta que vamos a recibir desde el menu */
     private int[] response = {-1};
     private SSCanvas game;      /*canvas game*/
     private Thread tgame;
     private boolean alive = true;
+    private String menuSelectorImg = "flecha1.png";
+    private String menuBackImg = "portada1.png";
     
     /**
      * The HelloMIDlet constructor.
@@ -144,6 +147,11 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     private void menuInitialize ()
     {
+         this.menuBackImg = null;
+         this.menuSelectorImg = null;
+         System.gc();
+         menuSelectorImg = "flecha1.png";
+         menuBackImg = "portada1.png";
          // write pre-initialize user code here
         int op = startMenu();     
 
@@ -177,18 +185,31 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     this.opciones = null;
                     System.gc();
                     /* aca deberiamos determinar si es el comienzo del juego o no */
-                    this.opciones = new String[4];
-                    this.opciones[0] = "Nivel 1";
-                    this.opciones[1] = "Nivel 2";
-                    this.opciones[2] = "Nivel 3";
-                    this.opciones[3] = "Nivel 4";
-                    op = this.startMenu();
-                    /* seteamos el nivel seleccionado */
-                    game.setLevel(op);
+                    if (game.firstRun) {
+                        this.opciones = new String[4];
+                        this.opciones[0] = "Nivel 1";
+                        this.opciones[1] = "Nivel 2";
+                        this.opciones[2] = "Nivel 3";
+                        this.opciones[3] = "Nivel 4";
+                        op = this.startMenu();
+                        /* seteamos el nivel seleccionado */
+                        game.setLevel(op);
+                    }
                     break;
 
-                case OP_CREDITS:
-                    this.alive = false;
+                case OP_HELP:
+                    this.menuBackImg = null;
+                    this.menuSelectorImg = null;
+                    this.opciones = null;
+                    System.gc();
+                    Form form = new Form("Creditos");
+                    
+                    form.append("Esto es una demostracion de nuestros creditos!"+
+                            " Nosotros somos alguien que quiere vender juegos loco"+
+                            "\nasique dejate de joder las bolas");
+                  
+                    this.display.setCurrent(form);
+
                     break;
 
                 case OP_EXIT_APP:
@@ -272,7 +293,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     */
     private int startMenu ()
     {
-        Menu menu = new Menu(opciones,"portada1.png", "flecha1.png",0,0xFFFFFFFF, response);
+        Menu menu = new Menu(opciones, menuBackImg, menuSelectorImg ,0,0xFFFFFFFF, response);
         Thread tmenu;
 
         
