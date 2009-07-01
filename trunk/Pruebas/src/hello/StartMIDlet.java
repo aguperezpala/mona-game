@@ -90,9 +90,21 @@ public class StartMIDlet extends MIDlet implements CommandListener {
      */
     public void startMIDlet() {//GEN-END:|3-startMIDlet|0|3-preAction
         // write pre-action user code here
+        Presentacion cerink = new Presentacion("logo_trans.png");
+        Thread tpres;
+
+
+        tpres = new Thread(cerink);
+        tpres.start();
+        //menu.setAlive(true);
+        Display.getDisplay(this).setCurrent(cerink);
+        
+        try { tpres.join();} catch (Exception e) {
+            System.out.print("Error PRESENTACION\n");
+        }
+        tpres = null;        
         this.game();
         /* aca mostramos el logo de nuestra empresa */
-
 //GEN-LINE:|3-startMIDlet|1|3-postAction
         // write post-action user code here
 
