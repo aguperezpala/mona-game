@@ -18,18 +18,18 @@ class SSCanvas extends Canvas implements Runnable{
     /* aca almacenamos los tiempos de cada nivel (por las dudas que no se pueda
      * reproducir el sonido
      */
-    private final int levelTime[] = {5400,3400,3400,3400};
+    private final int levelTime[] = {184000,299000,257000,141000};
     private int actualTime;
 
     private LevelSelector levelSel = new LevelSelector("mapa.png", this.getWidth(), this.getHeight());
 	private boolean activo = true;
     private boolean gameFinish = false;
-    private Random random = new Random();    
+    private Random random = new Random();
     private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
     private LayerManager lmanager;
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
     private Cartel bienAhi;    
-    private BotonManager btnmng = new BotonManager ("flecha.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
+    private BotonManager btnmng = new BotonManager ("flecha1.png", this.getWidth(),this.getHeight(),15,this.getHeight()-100,7);
     public boolean musicOn = true;
     private SoundPlayer sp = new SoundPlayer ("tema1.mid");
     public boolean firstRun = true;
@@ -53,17 +53,17 @@ class SSCanvas extends Canvas implements Runnable{
              mona.set_pos(this.getWidth()/2, this.getHeight()/2);             
              lmanager = new LayerManager();
              lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
-             //lmanager.insert(mona.getSprite(), 0);
-             lmanager.append(mona.getSprite());
+             //lmanager.insert(mona.getSprite(), 0);             
              luces.setNumberOfObjects(3);
              bienAhi = new Cartel("bien_ahi.png", this.getWidth(), this.getHeight(),10);
              bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2 +
                      this.textCoords[2]);
              bienAhi.setTimeToShow(2000);
              lmanager.append(bienAhi.getSprite());
+             lmanager.append(mona.getSprite());
              btnmng.setAlive(true);
              mona.set_velocity(100);
-             this.setLevel(0);
+            
             // sp.startMusic();          
              
          }
@@ -73,6 +73,7 @@ class SSCanvas extends Canvas implements Runnable{
          int lastMultiplier = 0;
          int actualMultiplier = 0;
          int levelShowTime = LevelSelector.showLevelTime;
+         long oldTime = System.currentTimeMillis();
          
 
          /* ahora vamos a chequear si es la primera corrida, si es asi entonces
@@ -95,12 +96,13 @@ class SSCanvas extends Canvas implements Runnable{
              this.gameFinish = false;
              this.levelSel.hide();
              levelShowTime = LevelSelector.showLevelTime;
+             this.setLevel(0);
          }
 
 
          while (this.activo == true) {
              repaint();
-             serviceRepaints();
+             serviceRepaints();             
 
 
              /* debemos chequear que el tiempo de la musica no se haya
@@ -177,14 +179,14 @@ class SSCanvas extends Canvas implements Runnable{
                       * a cargar el nuevo nivel, musica, escenografia y esas cosas */                     
                      if (levelShowTime <= 0) {
                          if (this.terminateGame) {
-                             this.activo = false;
+                             this.GamePause(true);
 
                          } else {
                              this.setMusicOn();
                              this.gameFinish = false;
                              this.levelSel.hide();
                              /* debemos reiniciar el tiempo de del nivel */
-                             actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+                             /*actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];*/
                             /* Aca esta el problema, deberiamos hacer lo siguiente:
                              * deberiamos chequear si podemos aumentar de nivel o no, si
                              * no podemos es porque se termino el juego! entonces deberiamos
@@ -197,7 +199,12 @@ class SSCanvas extends Canvas implements Runnable{
                  }
              }
              
-             actualTime -= 5;   /* depende del sleep de abajo */
+             /*actualTime = (int) (this.sp.getDuration() - this.sp.getActualTime())/100;   /* depende del sleep de abajo */
+             actualTime -= (int) (System.currentTimeMillis() - oldTime);
+            /* System.out.print("dif: "+ (int) (System.currentTimeMillis() - oldTime) +"\t");*/
+             oldTime = System.currentTimeMillis();
+             /*System.out.print("actual:"+this.sp.getActualTime()+"\tduration: "+
+                     this.sp.getDuration()+"\tdif: "+actualTime);*/
              try {
                  Thread.sleep(5);
              } catch (InterruptedException e) {
@@ -210,7 +217,8 @@ class SSCanvas extends Canvas implements Runnable{
              this.finalStr = null;
              this.finalImage = null;
              /* recargamos el tiempo del la primera cancion */
-             actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];
+             /*actualTime = this.levelTime[this.levelSel.actualLevel % this.levelTime.length];*/
+             actualTime = (int) this.sp.getDuration()/1000;
          }
          System.gc();
      }
@@ -263,7 +271,7 @@ class SSCanvas extends Canvas implements Runnable{
         }
         public void setLevel (int level)
         {
-            this.actualTime = this.levelTime[level % this.levelTime.length];
+            /*this.actualTime = this.levelTime[level % this.levelTime.length];*/
             this.levelSel.actualLevel = level % this.levelTime.length;
             /* aca seteamos la velocidad del nivel y los valores de la cantidad
              * de aciertos para cada multiplicador
@@ -310,7 +318,8 @@ class SSCanvas extends Canvas implements Runnable{
                     }
                     break;
             }
-            this.spaceTime.totalTime = this.levelTime[this.levelSel.actualLevel]+7;
+            this.spaceTime.totalTime = (int) this.sp.getDuration()/1000;
+            actualTime = this.spaceTime.totalTime;            
             this.sp.startMusic();
             /* reseteamos el multiplicador */
             this.btnmng.setMultiplier(1);
@@ -361,6 +370,7 @@ public void paint (Graphics g)
         g.setColor(255, 0, 0);    
         g.setFont(Font.getFont(Font.FACE_MONOSPACE, Font.STYLE_PLAIN, Font.SIZE_LARGE));
         this.btnmng.paint(g);
+        g.setColor(0x000000FF); /* azul */
         this.spaceTime.paint(g);
 
          //graficamos momentaneamente los puntos

@@ -51,6 +51,7 @@ public class BotonManager implements Runnable{
     /* Esta variable determina la cantidad de aciertos que tiene que haber para
      * pasar al proximo "multiplicador"
      */
+    private BarraTiempo spaceTime = null;
     public int resultsCount[] = {2,3,4,5};
     private int actualResultsCount = 0;             /* index del resultsCount */
     private int actualResults = 0;                  /* "determinador para avanzar resultcount */
@@ -88,6 +89,7 @@ public class BotonManager implements Runnable{
 
     public BotonManager (String nomImg, int px, int py, int scale, int pos, int dbb)
     {
+        this.spaceTime = new BarraTiempo(6*px/7-1, py/9,  px-2, py);
         //cargamos imagen con Resizer
         this.sprite = Resizer.spriteResized(nomImg, 0, py, scale-5, true);
         //CALCULAMOS LA ESCALA DE LA FLECHA
@@ -110,6 +112,10 @@ public class BotonManager implements Runnable{
         this.boton[0].setOrientation(BotonManager.orientations[rnd.nextInt(4)]);
         this.boton[1].setOrientation(BotonManager.orientations[rnd.nextInt(4)]);
         this.boton[2].setOrientation(BotonManager.orientations[rnd.nextInt(4)]);
+
+        /*this.spaceTime = new BarraTiempo((6*px/7)-1,py/9, px/7, py);*/        
+        
+
         /*
         this.boton[0].setAlive(true);
         this.boton[1].setAlive(true);
@@ -227,10 +233,12 @@ public class BotonManager implements Runnable{
                 this.boton[i].setOrientation(BotonManager.orientations[rnd.nextInt(4)]);
             }
 
-            
+            this.spaceTime.totalTime = 500;
+            this.spaceTime.actualTime = 500;
             //******     TRANSFORMACION DE AZUL A VERDE **************
             while (actualColor > 0 && buttonsInactive < 3) {
-                actualColor = actualColor - this.COLOR_CHANGE_VELOCITY;
+                actualColor = actualColor - BotonManager.COLOR_CHANGE_VELOCITY;
+                this.spaceTime.actualTime -= BotonManager.COLOR_CHANGE_VELOCITY;
 
                 for (int i = buttonsInactive; i < 3; i++) {
                   //  if (boton[i].isActive()) {  //si esta activo cambiamos de color
@@ -246,6 +254,7 @@ public class BotonManager implements Runnable{
             actualColor = 255;
             while (actualColor > 0 && buttonsInactive < 3) {
                 actualColor = actualColor - BotonManager.COLOR_CHANGE_VELOCITY;
+                this.spaceTime.actualTime -= BotonManager.COLOR_CHANGE_VELOCITY;
 
                 for (int i = buttonsInactive; i < 3; i++) {
                     //if (boton[i].isActive()) {  //si esta activo cambiamos de color
@@ -337,6 +346,7 @@ public class BotonManager implements Runnable{
             if (boton[i].isAlive())
                 boton[i].paint(g);
         }
+        this.spaceTime.paint(g);
         
 
     }
