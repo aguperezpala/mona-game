@@ -18,7 +18,7 @@ public class Presentacion extends Canvas implements Runnable {
     private Image backImg = null;
     private int imgPos[] = {0,0};
     private int strPos[] = {0,0};
-    private int showTime = 7000;    /* milisec */
+    private int showTime = 3500;    /* milisec */
     private String str = "PRESENTA";
 
     public Presentacion (String back)
@@ -34,19 +34,17 @@ public class Presentacion extends Canvas implements Runnable {
          
          this.imgPos[1] = this.getHeight()/2 - this.backImg.getHeight()/2;
          this.imgPos[0] = (this.getWidth() - this.backImg.getWidth())/2;
-         this.strPos[1] = this.imgPos[1] + this.backImg.getHeight() + font.getBaselinePosition() + 2;
+         this.strPos[1] = this.imgPos[1] + 3*this.backImg.getHeight()/2 + font.getBaselinePosition() + 2;
          this.strPos[0] = (this.getWidth() - font.stringWidth(str)) / 2;
 
     }
 
     public void run ()
     {
-        while (showTime >= 0) {
-            this.showTime-=5;
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {System.out.println(e.toString());}
-        }
+        try {
+            Thread.sleep(this.showTime);
+        } catch (InterruptedException e) {System.out.println(e.toString());}
+
         this.backImg = null;
         System.gc();
     }

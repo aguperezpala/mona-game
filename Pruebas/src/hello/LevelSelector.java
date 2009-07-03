@@ -19,7 +19,7 @@ public class LevelSelector {
     private Image map;          /* imagen del mapa */
     public int actualLevel = 0; /* nivel actual */    
     /* los nombres que vamos a mostrar de los lugares */
-    private final String levelStr[] = {"Lugar 1", "lugar 2", "lugar 3", "lugar 4"};
+    private final String levelStr[] = {"Estadio del Centro", "Super Deportivo", "Forja", "Sargento Cabral"};
     /* almacenamos las coordenadas de las pociciones de los lugares */
     private int levelMark[][] = {{77,97},{122,47},{115,95},{118,141}};
     /* kakaso, ya murio el hecho de "hacer bien las cosas" */

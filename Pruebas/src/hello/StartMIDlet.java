@@ -223,10 +223,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     Form form = new Form("Creditos");
                     form.addCommand(exitCommand);
                     form.setCommandListener(this);
-                    form.append("El juego consiste en apretar lo antes posible " +
-                            "las combinaciones de flechas. Para lograr esto se pueden " +
-                            "utilizar tanto el joystick del celular como asi las teclas " +
-                            "4 (izquierda), 6 (derecha), 2 (arriba), 8 (abajo)") ;
+                    form.append("Tenés que copiar las flechas bien rápido con las teclas 2,4,6,8" +
+                            "hasta terminar cada nivel. Entre mas veces aciertes mas puntos conseguís.");
                   
                     this.display.setCurrent(form);
                     /* ahora esperamos de forma cacasa que hayan salido de la ayuda
@@ -251,7 +249,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         this.opciones[0] = "Iniciar Juego";
         this.opciones[1] = "Opciones";
         this.opciones[2] = "Elejir Nivel";
-        this.opciones[3] = "Creditos";
+        this.opciones[3] = "Ayuda";
         this.opciones[4] = "Salir";
 
 
