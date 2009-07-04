@@ -13,7 +13,7 @@ import javax.microedition.lcdui.Font;
  * @author agustin
  */
 public class LevelSelector {
-    public static final int showLevelTime = 5000;   /* mostramos 5 segundos */
+    public static final int showLevelTime = 3500;   /* mostramos 4 segundos */
 
     private String imgName;
     private Image map;          /* imagen del mapa */
@@ -101,7 +101,7 @@ public class LevelSelector {
     public void paint (Graphics g)
     {
         /* dibujamos todo */
-        g.drawImage(map, 0, 0, Graphics.TOP | Graphics.LEFT);
+        g.drawImage(map, (this.windowWidth-this.map.getWidth())/2, 0, Graphics.TOP | Graphics.LEFT);
         /* ahora dibujamos los galpones y esas cosas */
         this.animSpeed = (this.animSpeed + 1) % 40;
          if (this.animSpeed == 0)
