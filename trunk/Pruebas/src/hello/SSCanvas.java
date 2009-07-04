@@ -224,17 +224,10 @@ class SSCanvas extends Canvas implements Runnable{
      }
 
 	    public void keyPressed(int keyCode) {
-	        int action=getGameAction(keyCode);
+	        boolean noApreto = false;
             int btnBits = 0;
 
-	        switch (action) {
-                    case FIRE:                        
-                      //  flecha.setTransform(Sprite.TRANS_ROT90);
-                       // flecha.setPosition(0, 0);
-                        break;
-                    case KEY_NUM5:
-         
-                        break;
+	        switch (getGameAction(keyCode)) {
 	            case LEFT:
                         mona.set_transformation(Sprite.TRANS_MIRROR);
                         btnBits = this.btnmng.pushButton(BotonManager.IZQUIERDA);
@@ -249,7 +242,32 @@ class SSCanvas extends Canvas implements Runnable{
                     case DOWN:
                         btnBits = this.btnmng.pushButton(BotonManager.ABAJO);
                         break;
+                default:
+                    noApreto = true;
+                    break;
+            }
+            if (noApreto) {
+                switch (keyCode) {
+
+                case KEY_NUM4:
+                        mona.set_transformation(Sprite.TRANS_MIRROR);
+                        btnBits = this.btnmng.pushButton(BotonManager.IZQUIERDA);
+	            	break;
+
+                    case KEY_NUM6:
+                        btnBits = this.btnmng.pushButton(BotonManager.DERECHA);
+                        break;
+                    case KEY_NUM2:
+                        btnBits = this.btnmng.pushButton(BotonManager.ARRIBA);
+                        break;
+                    case KEY_NUM8:
+                        btnBits = this.btnmng.pushButton(BotonManager.ABAJO);
+                        break;
+                case KEY_NUM1:
+                    this.GamePause(true);
+                    break;
 	        }
+        }
             if (btnBits != 0) {
                 /* si se completo la secuencia enviamos el mapa de bits al personaje
                  * para realizar determinada accion */
@@ -332,10 +350,12 @@ class SSCanvas extends Canvas implements Runnable{
             mona.set_alive(!t);
             this.btnmng.setAlive(!t);
             /* deberiamos reactivar la musica */
-            if (t)
-                this.sp.stop();
-            else
-                this.sp.startMusic();
+            if (!this.firstRun) {
+                if (t)
+                    this.sp.stop();
+                else
+                    this.sp.startMusic();
+            }
         }
 
 

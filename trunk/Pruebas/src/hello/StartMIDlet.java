@@ -40,7 +40,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     private Display display;    
     /* opciones que tiene el menu */
-    private String opciones[] = {"Iniciar Juego","Opciones", "Elejir Nivel", "Ayuda", "Salir"};
+    private String opciones[] = {"Jugar","Opciones", "Elejir Nivel", "Ayuda", "Salir"};
     /* respuesta que vamos a recibir desde el menu */
     private int[] response = {-1};
     private SSCanvas game;      /*canvas game*/
@@ -246,7 +246,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         this.opciones = null;
         System.gc();
         this.opciones = new String[5];
-        this.opciones[0] = "Iniciar Juego";
+        this.opciones[0] = "Jugar";
         this.opciones[1] = "Opciones";
         this.opciones[2] = "Elejir Nivel";
         this.opciones[3] = "Ayuda";
