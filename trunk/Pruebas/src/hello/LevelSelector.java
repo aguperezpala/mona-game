@@ -13,7 +13,7 @@ import javax.microedition.lcdui.Font;
  * @author agustin
  */
 public class LevelSelector {
-    public static final int showLevelTime = 3500;   /* mostramos 4 segundos */
+    public static final int showLevelTime = 4000;   /* mostramos 4 segundos */
 
     private String imgName;
     private Image map;          /* imagen del mapa */
