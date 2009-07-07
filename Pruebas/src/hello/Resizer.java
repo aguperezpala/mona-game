@@ -24,9 +24,9 @@ public class Resizer {
                     image = resizeImage(image, (int) (image.getWidth() * factor),
                         (int) (image.getHeight() * factor));                
             }
-            
+            System.gc();
             sprite = new Sprite(image);
-                
+            System.gc();
             //seteamos el pixel de referencia justo en el medio de la imagen
             sprite.defineReferencePixel(image.getWidth() / 2, image.getHeight() / 2);
             

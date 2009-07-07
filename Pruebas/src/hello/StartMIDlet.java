@@ -19,7 +19,7 @@ import javax.microedition.lcdui.Image;
 /**
  * @author agustin
  */
-public class StartMIDlet extends MIDlet implements CommandListener {
+public class StartMIDlet extends MIDlet implements CommandListener, Runnable {
 
     /*Aca vamos a declarar las variables globales que corresponden cada una a
      * la posicion del arreglo opciones. TENER EN CUENTA CUANDO SE MODIFICA EL
@@ -45,6 +45,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     private int[] response = {-1};
     private SSCanvas game;      /*canvas game*/
     private Thread tgame;
+    private Thread tall;
     private boolean alive = true;
     private String menuSelectorImg = "flecha1.png";
     private String menuBackImg = "portada1.png";
@@ -59,7 +60,7 @@ public class StartMIDlet extends MIDlet implements CommandListener {
          game = new SSCanvas();
          game.setCommandListener(this);
          /* agregamos el boton de salida del juego */
-         exitCommand = new Command("Volver",Command.SCREEN,2);
+         exitCommand = new Command("pausa/menu",Command.SCREEN,2);
          game.addCommand(exitCommand);
          
 
@@ -223,8 +224,10 @@ public class StartMIDlet extends MIDlet implements CommandListener {
                     Form form = new Form("Creditos");
                     form.addCommand(exitCommand);
                     form.setCommandListener(this);
-                    form.append("Tenés que copiar las flechas bien rápido con las teclas 2,4,6,8" +
-                            "hasta terminar cada nivel. Entre mas veces aciertes mas puntos conseguís.");
+                    form.append("Tenés que copiar las flechas bien rápido con las teclas 2,4,6,8 " +
+                            "hasta terminar cada nivel. Entre mas veces aciertes mas puntos conseguís.\n" +
+                            "A la izquierda te indicará el tiempo de ese nivel y a la derecha te indica" +
+                            " el tiempo para los tres movimientos.");
                   
                     this.display.setCurrent(form);
                     /* ahora esperamos de forma cacasa que hayan salido de la ayuda
@@ -300,7 +303,8 @@ public class StartMIDlet extends MIDlet implements CommandListener {
     /**
      * Called when MIDlet is paused.
      */
-    public void pauseApp() {       
+    public void pauseApp() {
+        this.midletPaused = true;
         game.GamePause(true);        
     }
 
@@ -345,14 +349,23 @@ public class StartMIDlet extends MIDlet implements CommandListener {
 
     private void game ()
     {        
+        tall = new Thread (this);
+        tall.start();
+    }
+
+    public void run ()
+    {
         while (this.alive)
         {
             try {tgame.join();} catch (Exception e){}
-            this.menuInitialize();            
+            this.menuInitialize();
         }
         this.game = null;
+        this.tall = null;
         System.gc();
         this.destroyApp(true);
+
+
     }
 
     private void startGame()
@@ -363,7 +376,9 @@ public class StartMIDlet extends MIDlet implements CommandListener {
         game.GamePause(false);        
         tgame = new Thread (game);
         tgame.start();
-        display.setCurrent(game);        
+        display.setCurrent(game);
+        this.midletPaused = false;
     }
+
 
 }

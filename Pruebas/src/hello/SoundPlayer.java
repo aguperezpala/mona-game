@@ -16,6 +16,7 @@ public class SoundPlayer {
    
     private  Player p;
     private VolumeControl vc;
+    private int volume;
     
     public SoundPlayer(String fname)
     {
@@ -41,7 +42,9 @@ public class SoundPlayer {
         }
         try {
             p = Manager.createPlayer(this.getClass().getResourceAsStream(fname), "audio/midi");
-	        p.realize();            
+	        p.realize();
+            vc = (VolumeControl) p.getControl("VolumeControl");
+            vc.setLevel(this.volume);
         } catch (Exception ioe) {
             System.out.print(ioe.toString());
         }
@@ -57,6 +60,7 @@ public class SoundPlayer {
 
     public void startMusic()
     {
+
         try {p.start();}catch(Exception e){};
     }
     
@@ -67,6 +71,7 @@ public class SoundPlayer {
 
     public void setVolume (int v)
     {
+        this.volume = v;
         this.vc.setLevel(v);
     }
     

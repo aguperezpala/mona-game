@@ -60,6 +60,7 @@ public class Personaje implements Runnable {
          Image image;
         try {
             //cargamos la imagen
+            System.gc();
             image = Image.createImage(getClass().getResourceAsStream(nomImg));
             {
                 int ix, iy;
@@ -72,11 +73,11 @@ public class Personaje implements Runnable {
                 iy = ((int)(height * factor))*ny;
                                 
                 
-                if (Math.abs(ix - image.getWidth()) > PIXELS_TOLERANCE_FOR_RESIZE &&
+               if (Math.abs(ix - image.getWidth()) > PIXELS_TOLERANCE_FOR_RESIZE &&
                         Math.abs(iy - image.getHeight()) > PIXELS_TOLERANCE_FOR_RESIZE){
                     //hacemos un resize porque es mayor
                     image = Resizer.resizeImage(image, ix, iy);
-                    
+                    System.gc();
                     this.sprite = new Sprite(image, (int)(width *factor),
                             (int)(height * factor));
                     
@@ -84,6 +85,8 @@ public class Personaje implements Runnable {
                     //no hacemos ningun resize
                     this.sprite = new Sprite(image, width,height);
                 }
+                
+                System.gc();
                 /* ahora vamos a setear las secuencias de las animaciones */
                 this.sprite.setFrameSequence(animNormal);
                 this.sprite.setFrameSequence(animSalto);

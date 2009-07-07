@@ -26,6 +26,7 @@ class SSCanvas extends Canvas implements Runnable{
     private boolean gameFinish = false;
     private Random random = new Random();
     private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
+    //private Personaje mona = new Personaje("galpon.png", this.getWidth(), this.getHeight(), 5, 21, 70);
     private LayerManager lmanager;
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
     private Cartel bienAhi;    
@@ -63,6 +64,7 @@ class SSCanvas extends Canvas implements Runnable{
              lmanager.append(mona.getSprite());
              btnmng.setAlive(true);
              mona.set_velocity(100);
+             this.sp.setVolume(100);
             
             // sp.startMusic();          
              
@@ -86,7 +88,8 @@ class SSCanvas extends Canvas implements Runnable{
              while (levelShowTime >= 0) {
                  repaint();
                  serviceRepaints();
-                 levelShowTime -= 5;
+                 levelShowTime  -= (int) (System.currentTimeMillis() - oldTime);
+                 oldTime = System.currentTimeMillis();
                  try {
                      Thread.sleep(5);
                  } catch (InterruptedException e) {
@@ -174,7 +177,7 @@ class SSCanvas extends Canvas implements Runnable{
                         this.gameFinish = true;
                     }
                  } else {
-                     levelShowTime = levelShowTime - 5; /* depende del sleep del ciclo */
+                     levelShowTime -= (int) (System.currentTimeMillis() - oldTime); /* depende del sleep del ciclo */
                      /* ahora deberiamos chequear que si termino de mostrarse volvemos
                       * a cargar el nuevo nivel, musica, escenografia y esas cosas */                     
                      if (levelShowTime <= 0) {
@@ -263,9 +266,9 @@ class SSCanvas extends Canvas implements Runnable{
                     case KEY_NUM8:
                         btnBits = this.btnmng.pushButton(BotonManager.ABAJO);
                         break;
-                case KEY_NUM1:
+              /*  case KEY_NUM1:
                     this.GamePause(true);
-                    break;
+                    break;*/
 	        }
         }
             if (btnBits != 0) {
@@ -408,5 +411,10 @@ public void paint (Graphics g)
 
 
 }
-
+/*
+protected void hideNotify ()
+{
+    this.GamePause(true);    
+}
+*/
  }
