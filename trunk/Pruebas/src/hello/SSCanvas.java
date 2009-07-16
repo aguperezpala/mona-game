@@ -25,7 +25,7 @@ class SSCanvas extends Canvas implements Runnable{
 	private boolean activo = true;
     private boolean gameFinish = false;
     private Random random = new Random();
-    private Personaje mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
+    private Personaje mona = null;
     //private Personaje mona = new Personaje("galpon.png", this.getWidth(), this.getHeight(), 5, 21, 70);
     private LayerManager lmanager;
     private Efecto luces = new Efecto("luz.png", this.getWidth(), this.getHeight(), 10);
@@ -51,19 +51,12 @@ class SSCanvas extends Canvas implements Runnable{
               * (1/7,windowHeight) */
              this.spaceTime = new BarraTiempo(1,this.getHeight()/9, this.getWidth()/7,
                      this.getHeight());
-             mona.set_pos(this.getWidth()/2, this.getHeight()/2);             
+             
              lmanager = new LayerManager();
              lmanager.setViewWindow(0, 0, this.getWidth(), this.getHeight());
              //lmanager.insert(mona.getSprite(), 0);             
              luces.setNumberOfObjects(3);
-             bienAhi = new Cartel("bien_ahi.png", this.getWidth(), this.getHeight(),10);
-             bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2 +
-                     this.textCoords[2]);
-             bienAhi.setTimeToShow(2000);
-             lmanager.append(bienAhi.getSprite());
-             lmanager.append(mona.getSprite());
              btnmng.setAlive(true);
-             mona.set_velocity(100);
              this.sp.setVolume(100);
             
             // sp.startMusic();          
@@ -350,7 +343,7 @@ class SSCanvas extends Canvas implements Runnable{
         public void GamePause (boolean t)
         {
             this.activo = !t;
-            mona.set_alive(!t);
+            
             this.btnmng.setAlive(!t);
             /* deberiamos reactivar la musica */
             if (!this.firstRun) {
@@ -359,6 +352,35 @@ class SSCanvas extends Canvas implements Runnable{
                 else
                     this.sp.startMusic();
             }
+
+            if (t) {
+                /* vamos a eliminar todo lo que no usemos */
+                lmanager.remove(mona.getSprite());
+                mona = null;
+                lmanager.remove(bienAhi.getSprite());
+                bienAhi = null;
+                System.gc();
+
+
+            } else {
+                  /* boton bien ahi */
+                bienAhi = new Cartel("bien_ahi.png", this.getWidth(), this.getHeight(),10);
+                bienAhi.setPos(this.getWidth()/2, bienAhi.getSprite().getHeight()/2 +
+                     this.textCoords[2]);
+                bienAhi.setTimeToShow(2000);
+                lmanager.append(bienAhi.getSprite());
+                
+                /* configuramos la mona */                
+                mona = new Personaje("tira_enorme.png", this.getWidth(), this.getHeight(), 100, 150, 70);
+                mona.set_alive(!t);
+                mona.set_pos(this.getWidth()/2, this.getHeight()/2);
+                lmanager.append(mona.getSprite());
+                mona.set_velocity(100);
+
+              
+
+            }
+                
         }
 
 
