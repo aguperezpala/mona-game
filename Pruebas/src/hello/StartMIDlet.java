@@ -342,6 +342,8 @@ public class StartMIDlet extends MIDlet implements CommandListener, Runnable {
             System.out.print("Error al esperar tmenu \n");
         }
         tmenu = null;
+        menu = null;
+        System.gc();
         
         return this.response[0];
     }
